@@ -10,5 +10,10 @@ class Modelo{
 
     public function getUsersbyAdmin($id){
         $query="SELECT * FROM Usuarios WHERE ID_administrador = $id";
+        $r=$this->db->query($query);
+        while ($row=$r->fetch_assoc()){
+            $this->datos[]=$row;
+        }
+        return $this->datos;
     }
 }
