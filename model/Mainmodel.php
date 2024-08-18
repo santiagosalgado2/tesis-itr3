@@ -1,6 +1,6 @@
 <?php
 
-class Modelo{
+class Mainmodel{
     private $db;
     private $datos;
     public function __construct(){
