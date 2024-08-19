@@ -13,17 +13,7 @@ class Usersmodel extends Mainmodel{
 
     }
 
-    public function getEsp32byUser($id){
-        $query="SELECT 
-        e.ubicacion
-        FROM esp32 e 
-        JOIN control_dispositivos cd ON cd.ID_esp32=e.ID_esp32
-        JOIN acceso_usuarios au ON au.ID_control=cd.ID_control
-        JOIN usuarios u ON u.ID_usuario=au.ID_usuario
-        WHERE u.ID_usuario=$id
-        GROUP BY e.ID_esp32";
-        return parent::getDatos($query);
-    }
+
 
     public function insertUser($name,$email,$pw,$salt,$fecha,$id_p,$id_a=null){
         if($id_a==null){
@@ -41,6 +31,10 @@ class Usersmodel extends Mainmodel{
         $this->db->query($query);
     }
 
+    public function deleteUser($id){
+        $query="DELETE FROM Usuarios WHERE ID_usuario=$id";
+        $this->db->query($query);
+    }
 
     
 }
