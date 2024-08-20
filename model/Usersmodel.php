@@ -36,5 +36,5 @@ class Usersmodel extends Mainmodel{
         $this->db->query($query);
     }
 
-    
+    echo "";
 }
