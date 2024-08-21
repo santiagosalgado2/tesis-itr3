@@ -3,32 +3,30 @@
 class Usersmodel extends Mainmodel{
 
     public function getUsersbyAdmin($id){
-        $query="SELECT * FROM Usuarios WHERE ID_administrador = $id";
-        return parent::getDatos($query);
+        return parent::selectbykey("Usuarios","ID_administrador",$id);
     }
 
     public function getUser($id){
-        $query="SELECT * FROM Usuarios WHERE ID_usuario=$id LIMIT 1";
-        return parent::getRegistro($query);
+        return parent::selectbykey("Usuarios","ID_usuario",$id);
 
     }
-
-
-
     public function insertUser($name,$email,$pw,$salt,$fecha,$id_p,$id_a=null){
-        if($id_a==null){
-            $query="INSERT INTO Usuarios 
-            (`nombre_usuario`, `email`, `hash_contrasena`, `salt`, `fecha_creacion`, `ID_permiso`, `ID_administrador`) 
-            VALUES
-            ($name,$email,$pw,$salt,$fecha,$id_p,NULL)";
-        }else{
-            $query="INSERT INTO Usuarios 
-            (`nombre_usuario`, `email`, `hash_contrasena`, `salt`, `fecha_creacion`, `ID_permiso`, `ID_administrador`) 
-             VALUES
-            ($name,$email,$pw,$salt,$fecha,$id_p,$id_a)";
+        $data=[
+            "nombre_usuario" => $name,
+            "email" => $email,
+            "hash_contrasena" => $pw,
+            "salt" => $salt,
+            "fecha_creacion" => "CURRENT_TIMESTAMP",
+            "ID_permiso" => $id_p
+
+        ];
+
+        if($id_a!==null){
+            $data["ID_administrador"]=$id_a;
+
         }
-        
-        $this->db->query($query);
+
+        parent::insert("Usuarios",$data);
     }
 
     public function deleteUser($id){
