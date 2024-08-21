@@ -6,6 +6,11 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <h1>
+        Pagina de inicio
+    </h1>
+
+    <a href="">Registrarse</a>
+    <a href="">Iniciar sesion</a>
 </body>
 </html>
