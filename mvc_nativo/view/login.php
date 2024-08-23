@@ -6,8 +6,12 @@
     <title>Document</title>
 </head>
 <body>
+<?php if(isset($error)){
+    echo $error;
+}
+?>
     <h1><center>Login de prueba</center></h1>
-    <form>
+    <form method="post" action="index.php?c=Sesion&a=login">
         <input type="text" placeholder="Nombre de usuario" required name="username">
         <label for="username">Ingrese usuario</label><br>
 

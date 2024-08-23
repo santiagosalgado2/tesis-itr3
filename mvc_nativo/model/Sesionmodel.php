@@ -12,4 +12,8 @@ class Sesionmodel extends Mainmodel{
 
         parent::insert("sesiones",$data);
     }
+
+    public function validateSesion($token){
+       return parent::selectbykey("sesiones","token_sesion",$token);
+    }
 }

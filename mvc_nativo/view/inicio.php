@@ -6,9 +6,12 @@
     <title>Document</title>
 </head>
 <body>
+
+
     <h1>
         Pagina de inicio
     </h1>
+    <h2>Bienvenido <?php echo $_SESSION["username"];?> </h2>
 
 </body>
 </html>

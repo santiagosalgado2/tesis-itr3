@@ -9,11 +9,11 @@
 <body>
 <h1><center>Registro de prueba</center></h1>
 
-<?php if($error){
+<?php if(isset($error)){
     echo $error;
 }
 ?>
-    <form>
+    <form method="post" action="index.php?c=Sesion&a=register">
         <input type="text" placeholder="Nombre de usuario" required name="username">
         <label for="username">Ingrese usuario</label><br>
 

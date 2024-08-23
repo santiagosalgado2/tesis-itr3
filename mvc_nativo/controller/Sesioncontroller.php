@@ -20,10 +20,8 @@ class Sesioncontroller extends Maincontroller{
             $password = $_POST['password'];
             $email = $_POST['email'];
 
-            $verify_name=$this->users->getUserbyname($username);
-            $verify_mail=$this->users->getUserbyemail($email);
 
-            if($verify_name OR $verify_mail){
+            if($this->users->getUserbyname($username) OR $this->users->getUserbyemail($email)){
                 $error="El nombre de usuario ya existe o el Mail ya esta registrado";
                 $this->register_view();
             }else{
@@ -34,13 +32,47 @@ class Sesioncontroller extends Maincontroller{
 
             }
 
+            if(isset($_SESSION["username"])){
+                session_unset();  // Limpia todas las variables de sesión
+                session_destroy(); // Destruye la sesión
+                
+            }
             session_start();
+                $_SESSION["user_id"]=$userID["ID_usuario"];
+                $_SESSION["token"]=$token;
+                $_SESSION["username"]=$username;
+            require_once("view/inicio.php");
+        }
+    }
 
-            $_SESSION["user_id"]=$userID["ID_usuario"];
-            $_SESSION["token"]=$token;
+    public function login(){
+        
 
-            header("Location: http://localhost/tesis_g_s/tesis-itr3/mvc_nativo/");
-            exit;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+            $user=$this->users->getUserbyname($username);
+
+            if($user && password_verify($password,$user["hash_contrasena"])){
+                if(isset($_SESSION["username"])){
+                    session_unset();  // Limpia todas las variables de sesión
+                    session_destroy();
+                    
+                }else{
+                    $_SESSION["username"]=$username;
+                    $_SESSION["password"]=$password;
+                    $token = bin2hex(random_bytes(32));
+                    $this->sesion->createSesion($user["ID_usuario"],$token);
+                }
+
+                require_once("view/inicio.php");
+            }else{
+                $error="Usuario o contraseña incorrectos";
+                require_once("view/login.php");
+            }
+        }else{
+            require_once("view/login.php");
         }
     }
 

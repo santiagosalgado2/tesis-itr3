@@ -12,11 +12,17 @@ class Usersmodel extends Mainmodel{
     }
 
     public function getUserbyname($name){
-        return parent::selectbykey("Usuarios","nombre_usuario",$name);
+        $query="SELECT * FROM Usuarios WHERE nombre_usuario = '$name'";
+        $r=$this->db->query($query);
+        $result=$r->fetch_assoc();
+        return $result;
     }
 
     public function getUserbyemail($mail){
-        return parent::selectbykey("Usuarios","email",$mail);
+        $query="SELECT * FROM Usuarios WHERE email='$mail'";
+        $r=$this->db->query($query);
+        $result=$r->fetch_assoc();
+        return $result;
     }
     public function insertUser($name,$email,$pw,$id_p,$id_a=null){
         $hash=password_hash($pw,PASSWORD_DEFAULT);
