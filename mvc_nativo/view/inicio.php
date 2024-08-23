@@ -10,7 +10,5 @@
         Pagina de inicio
     </h1>
 
-    <a href="">Registrarse</a>
-    <a href="">Iniciar sesion</a>
 </body>
 </html>
