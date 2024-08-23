@@ -20,10 +20,13 @@ class Esp32model extends Mainmodel{
     }
 
     public function insertEsp32($mac,$ip,$ubicacion,$estado){
-        $query="INSERT INTO `esp32`( `direccion_mac`, `direccion_ip`, `ubicacion`, `estado`) VALUES 
-        ($mac,$ip,$ubicacion,$estado)";
-
-        $this->db->query($query);
+        $data=[ 
+            "direccion_mac"=> $mac,
+            "direccion_ip"=> $ip,
+            "ubicacion"=> $ubicacion,
+            "estado"=> $estado
+        ];
+        parent::insert("esp32",$data);
     }
 
 }
