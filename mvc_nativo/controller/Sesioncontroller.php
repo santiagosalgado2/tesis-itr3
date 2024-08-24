@@ -10,9 +10,7 @@ class Sesioncontroller extends Maincontroller{
         $this->users=new Usersmodel;
         $this->sesion=new Sesionmodel;
     }
-    public function register_view(){
-        require_once("view/register.php");
-    }
+ 
 
     public function register(){
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -23,7 +21,7 @@ class Sesioncontroller extends Maincontroller{
 
             if($this->users->getUserbyname($username) OR $this->users->getUserbyemail($email)){
                 $error="El nombre de usuario ya existe o el Mail ya esta registrado";
-                $this->register_view();
+                require_once("view/register.php");
             }else{
                 $this->users->insertUser($username,$email,$password,1);
                 $userID=$this->users->getUserbyname($username);
@@ -41,7 +39,12 @@ class Sesioncontroller extends Maincontroller{
                 $_SESSION["user_id"]=$userID["ID_usuario"];
                 $_SESSION["token"]=$token;
                 $_SESSION["username"]=$username;
-            require_once("view/inicio.php");
+            
+            header("Location: http://localhost/TESIS/tesis-itr3/mvc_nativo/index.php");
+            exit();
+
+        }else{
+            require_once("view/register.php");
         }
     }
 
@@ -58,15 +61,19 @@ class Sesioncontroller extends Maincontroller{
                 if(isset($_SESSION["username"])){
                     session_unset();  // Limpia todas las variables de sesión
                     session_destroy();
+                    session_start();
                     
-                }else{
+                }
+                    
                     $_SESSION["username"]=$username;
                     $_SESSION["password"]=$password;
                     $token = bin2hex(random_bytes(32));
+                    $_SESSION["token"]=$token;
                     $this->sesion->createSesion($user["ID_usuario"],$token);
-                }
+                
 
-                require_once("view/inicio.php");
+                    header("Location: http://localhost/TESIS/tesis-itr3/mvc_nativo/index.php");
+                    exit();
             }else{
                 $error="Usuario o contraseña incorrectos";
                 require_once("view/login.php");
@@ -74,6 +81,15 @@ class Sesioncontroller extends Maincontroller{
         }else{
             require_once("view/login.php");
         }
+    }
+
+    public function logout(){
+        session_start();
+        session_unset();
+        session_destroy();
+
+        header("Location: http://localhost/TESIS/tesis-itr3/mvc_nativo/");
+        exit();
     }
 
 

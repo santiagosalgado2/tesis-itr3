@@ -24,6 +24,6 @@
         <input type="submit" value="Ingresar">
     </form>
 <br><br>
-    <a href="index.php?c=Sesion&a=register_view">¿No tienes una cuenta? Registrate</a>
+    <a href="index.php?c=Sesion&a=register">¿No tienes una cuenta? Registrate</a>
 </body>
 </html>

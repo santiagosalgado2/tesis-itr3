@@ -13,5 +13,6 @@
     </h1>
     <h2>Bienvenido <?php echo $_SESSION["username"];?> </h2>
 
+    <a href="index.php?c=Sesion&a=logout">Cerrar sesion</a>
 </body>
 </html>
