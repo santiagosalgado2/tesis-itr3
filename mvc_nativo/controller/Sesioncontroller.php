@@ -61,19 +61,19 @@ class Sesioncontroller extends Maincontroller{
                 if(isset($_SESSION["username"])){
                     session_unset();  // Limpia todas las variables de sesión
                     session_destroy();
-                    session_start();
+                    
                     
                 }
-                    
-                    $_SESSION["username"]=$username;
-                    $_SESSION["password"]=$password;
-                    $token = bin2hex(random_bytes(32));
-                    $_SESSION["token"]=$token;
-                    $this->sesion->createSesion($user["ID_usuario"],$token);
-                
 
-                    header("Location: http://localhost/TESIS/tesis-itr3/mvc_nativo/index.php");
-                    exit();
+                session_start();
+                $token = bin2hex(random_bytes(32));
+                $this->sesion->createSesion($user["ID_usuario"],$token);
+                $_SESSION["username"]=$username;
+                $_SESSION["password"]=$password;
+                $_SESSION["token"]=$token;
+                
+                header("Location: http://localhost/TESIS/tesis-itr3/mvc_nativo/index.php");
+                
             }else{
                 $error="Usuario o contraseña incorrectos";
                 require_once("view/login.php");
