@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-08-2024 a las 16:44:30
+-- Tiempo de generación: 27-08-2024 a las 21:29:32
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -145,17 +145,13 @@ CREATE TABLE `usuarios` (
 -- Indices de la tabla `acceso_usuarios`
 --
 ALTER TABLE `acceso_usuarios`
-  ADD PRIMARY KEY (`ID_a_u`),
-  ADD KEY `ID_dispositivo` (`ID_dispositivo`),
-  ADD KEY `ID_usuario` (`ID_usuario`);
+  ADD PRIMARY KEY (`ID_a_u`);
 
 --
 -- Indices de la tabla `dispositivos`
 --
 ALTER TABLE `dispositivos`
-  ADD PRIMARY KEY (`ID_dispositvo`),
-  ADD KEY `ID_tipo` (`ID_tipo`),
-  ADD KEY `ID_esp32` (`ID_esp32`);
+  ADD PRIMARY KEY (`ID_dispositvo`);
 
 --
 -- Indices de la tabla `disp_esp32`
@@ -173,8 +169,7 @@ ALTER TABLE `funciones`
 -- Indices de la tabla `login_attemps`
 --
 ALTER TABLE `login_attemps`
-  ADD PRIMARY KEY (`ID_login_attemp`),
-  ADD KEY `ID_usuario` (`ID_usuario`);
+  ADD PRIMARY KEY (`ID_login_attemp`);
 
 --
 -- Indices de la tabla `permisos`
@@ -186,9 +181,7 @@ ALTER TABLE `permisos`
 -- Indices de la tabla `senalesir`
 --
 ALTER TABLE `senalesir`
-  ADD PRIMARY KEY (`ID_senal`),
-  ADD KEY `ID_dispositivo` (`ID_dispositivo`),
-  ADD KEY `ID_funcion` (`ID_funcion`);
+  ADD PRIMARY KEY (`ID_senal`);
 
 --
 -- Indices de la tabla `tipo_dispositivos`
@@ -200,9 +193,7 @@ ALTER TABLE `tipo_dispositivos`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`ID_usuario`),
-  ADD KEY `ID_permiso` (`ID_permiso`),
-  ADD KEY `ID_administrador` (`ID_administrador`);
+  ADD PRIMARY KEY (`ID_usuario`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -261,44 +252,6 @@ ALTER TABLE `tipo_dispositivos`
 --
 ALTER TABLE `usuarios`
   MODIFY `ID_usuario` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `acceso_usuarios`
---
-ALTER TABLE `acceso_usuarios`
-  ADD CONSTRAINT `acceso_usuarios_ibfk_1` FOREIGN KEY (`ID_dispositivo`) REFERENCES `dispositivos` (`ID_dispositvo`),
-  ADD CONSTRAINT `acceso_usuarios_ibfk_2` FOREIGN KEY (`ID_usuario`) REFERENCES `usuarios` (`ID_usuario`);
-
---
--- Filtros para la tabla `dispositivos`
---
-ALTER TABLE `dispositivos`
-  ADD CONSTRAINT `dispositivos_ibfk_1` FOREIGN KEY (`ID_tipo`) REFERENCES `tipo_dispositivos` (`ID_tipo`),
-  ADD CONSTRAINT `dispositivos_ibfk_2` FOREIGN KEY (`ID_esp32`) REFERENCES `disp_esp32` (`ID_dispositivo`);
-
---
--- Filtros para la tabla `login_attemps`
---
-ALTER TABLE `login_attemps`
-  ADD CONSTRAINT `login_attemps_ibfk_1` FOREIGN KEY (`ID_usuario`) REFERENCES `usuarios` (`ID_usuario`);
-
---
--- Filtros para la tabla `senalesir`
---
-ALTER TABLE `senalesir`
-  ADD CONSTRAINT `senalesir_ibfk_1` FOREIGN KEY (`ID_dispositivo`) REFERENCES `dispositivos` (`ID_dispositvo`),
-  ADD CONSTRAINT `senalesir_ibfk_2` FOREIGN KEY (`ID_funcion`) REFERENCES `funciones` (`ID_funcion`);
-
---
--- Filtros para la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`ID_permiso`) REFERENCES `permisos` (`ID_permiso`),
-  ADD CONSTRAINT `usuarios_ibfk_2` FOREIGN KEY (`ID_administrador`) REFERENCES `usuarios` (`ID_usuario`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
