@@ -1,3 +1,4 @@
+#LEER SEÑAL IR
 from machine import Pin
 import time
 
