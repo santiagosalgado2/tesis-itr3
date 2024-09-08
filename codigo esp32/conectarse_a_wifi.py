@@ -6,7 +6,7 @@ station = network.WLAN(network.STA_IF)
 station.active(True)
 
 # Conéctate a la red Wi-Fi (cambia 'SSID' y 'password' por los de tu red)
-station.connect("RioTel_SalgadO", "dcfs5411")
+station.connect("ssid", "password")
 
 # Espera a que se conecte
 while not station.isconnected():
