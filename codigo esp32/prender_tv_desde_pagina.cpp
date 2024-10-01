@@ -39,11 +39,11 @@ void sendIR() {
     IrSender.sendRC6((uint32_t)0xC, 4); 
     delay(40); // Espera 40 ms antes de la siguiente señal
     IrSender.sendRC6((uint32_t)0x1000C, 20); 
-    delay(100); // Espera 40 ms antes de la siguiente señal
+    delay(1000); // Espera 40 ms antes de la siguiente señal
     IrSender.sendRC6((uint32_t)0x1000C, 20);  
     delay(40); // Espera 40 ms antes de la siguiente señal
     IrSender.sendRC6((uint32_t)0xC, 4); 
-    delay(100); // Espera 40 ms antes de la siguiente señal
+    delay(1000); // Espera 40 ms antes de la siguiente señal
   }
 
 
