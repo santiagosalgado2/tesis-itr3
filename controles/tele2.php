@@ -22,7 +22,7 @@
 
         <div class="d-flex flex-row justify-content-center">
             <div class="menu-grid">
-                <div class="d-flex flex-column align-items-center">
+                <div class="d-flex flex-column align-items-center" onclick="sendData('power')">
                     <i class="fas fa-power-off active"></i>
                     <span class="label">Power</span>
                 </div>
@@ -106,6 +106,16 @@
     </div>
 </div>
     </div>
+
+
+    <script>
+    function sendData(command) {
+        // Aquí puedes realizar lo que necesites con el dato, como enviar a un servidor
+        console.log("Comando enviado:", command);
+    }
+    </script>
+
+
 </body>
 
 </html>
