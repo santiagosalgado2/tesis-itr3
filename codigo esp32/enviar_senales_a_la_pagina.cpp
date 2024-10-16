@@ -8,11 +8,12 @@ IRrecv irrecv(RECV_PIN);
 IRData results;
 
 // Configuración de la red WiFi
-const char* ssid = "ITR3-6";
-const char* password = "archivado";
+const char* ssid = "RioTel_SalgadO";
+const char* password = "dcfs5411";
 
 // URL de destino
-const char* serverName = "http://192.168.2.151/pagina_web/pagina_web/public/recibir_codigo";
+const char* serverName = "http://192.168.1.105/pagina_web/pagina_web/public/recibir_codigo";
+String code="ABCD1234";
 
 void setup() {
   Serial.begin(115200);
@@ -32,7 +33,7 @@ void sendIRCode(uint32_t irCode) {
     HTTPClient http;
     http.begin(serverName);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    String postData = "irCode=" + String(irCode, HEX);
+    String postData = "irCode=" + String(irCode, HEX) + "&code=" + code;
     int httpResponseCode = http.POST(postData);
     if (httpResponseCode > 0) {
       String response = http.getString();
