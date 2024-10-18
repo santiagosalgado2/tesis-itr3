@@ -1,0 +1,7 @@
+ledParpadeo = 5
+
+ledConectado = 14
+
+LED IR = 13
+
+RECEPTOR IR = 15
