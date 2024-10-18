@@ -3,13 +3,19 @@
 #include <esp_smartconfig.h>
 #include <HTTPClient.h>
 
-const char* serverName = "http://192.168.1.105/pagina_web/pagina_web/public/new_esp/receive";
+const char* serverName = "http://192.168.2.151/pagina_web/pagina_web/public/new_esp/receive";
 // REEMPLAZAR POR LA IP DE LA PC HASTA QUE SE HOSTEE LA PAGINA
 String code = "8lIsgR9J";
 
+const int ledParpadeo = 5;  // LED que parpadea mientras se conecta
+const int ledConectado = 14;  // LED que parpadea mientras se conecta
+
+
 void setup() {
   Serial.begin(115200);
-  
+  pinMode(ledParpadeo, OUTPUT);
+  pinMode(ledConectado, OUTPUT);
+
   // Intentar conectar automáticamente a la última red conocida
   WiFi.mode(WIFI_AP_STA);
   WiFi.begin();
@@ -20,11 +26,15 @@ void setup() {
   // Esperar hasta que se conecte o se agoten los intentos de reconexión
   while (WiFi.status() != WL_CONNECTED && retries < 10) {
     retries++;
-    delay(500);
+    digitalWrite(ledParpadeo, HIGH);  // Enciende LED de parpadeo
+    delay(1000);
+    digitalWrite(ledParpadeo, LOW);   // Apaga LED de parpadeo
+    delay(1000);
     Serial.print(".");
   }
 
   if (WiFi.status() == WL_CONNECTED) {
+    digitalWrite(ledConectado, HIGH);  // Enciende LED de parpadeo
     Serial.println("\nConectado a la red WiFi.");
     Serial.printf("Conectado a %s\n", WiFi.SSID().c_str());
     Serial.print("IP Address: ");
@@ -38,7 +48,10 @@ void setup() {
 
     // Espera hasta que SmartConfig esté completado
     while (!WiFi.smartConfigDone()) {
-      delay(500);
+      digitalWrite(ledParpadeo, HIGH);  // Enciende LED de parpadeo
+      delay(1000);
+      digitalWrite(ledParpadeo, LOW);   // Apaga LED de parpadeo
+      delay(1000);
       Serial.print(".");
     }
 
@@ -50,6 +63,7 @@ void setup() {
 
   // Si la conexión WiFi está establecida, envía la IP al servidor
   if (WiFi.status() == WL_CONNECTED) {
+    digitalWrite(ledConectado, HIGH);  // Enciende LED de parpadeo
     String espIp = WiFi.localIP().toString();
     
     // Crea un cliente HTTP
