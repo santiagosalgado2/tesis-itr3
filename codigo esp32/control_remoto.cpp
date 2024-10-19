@@ -14,30 +14,44 @@ const char* password = "dcfs5411";
 
 // Función para manejar la recepción de señales y enviarlas por IR
 void handleSendIR() {
-  if (server.hasArg("signal1") && server.hasArg("signal2")) {
-    // Lee los parámetros recibidos desde el cliente (signal1 y signal2)
-    String signal1Str = server.arg("signal1");
-    String signal2Str = server.arg("signal2");
+  // Verificar si hay datos en el cuerpo de la solicitud
+  if (server.hasArg("plain")) {
+    // Obtener el cuerpo de la solicitud (se espera que sea un string de números separados por comas)
+    String body = server.arg("plain");
 
-    // Convertir las señales a valores numéricos (hexadecimales)
-    uint32_t signal1 = strtoul(signal1Str.c_str(), NULL, 16);
-    uint32_t signal2 = strtoul(signal2Str.c_str(), NULL, 16);
+    // Crear un buffer para almacenar los datos procesados
+    std::vector<uint16_t> rawData;
+    
+    // Dividir el string en partes separadas por comas
+    int startIndex = 0;
+    int commaIndex;
+    while ((commaIndex = body.indexOf(',', startIndex)) != -1) {
+      String numberStr = body.substring(startIndex, commaIndex);
+      rawData.push_back(numberStr.toInt()); // Convertir a entero y agregar al vector
+      startIndex = commaIndex + 1; // Avanzar al siguiente índice
+    }
+    // Agregar el último número (si existe)
+    if (startIndex < body.length()) {
+      String numberStr = body.substring(startIndex);
+      rawData.push_back(numberStr.toInt());
+    }
 
-    // Enviar la primera señal IR con protocolo RC6
-    IrSender.sendRC6(signal1, 32);  // Enviar 32 bits con RC6
-    delay(1000);  // Pausa entre las señales
+    // Verificar que el array no esté vacío
+    if (rawData.size() > 0) {
+      // Emitir la señal IR utilizando la señal cruda (RAW)
+      IrSender.sendRaw(rawData.data(), rawData.size(), 38);  // 38 kHz de frecuencia
 
-    // Enviar la segunda señal IR con protocolo RC6
-    IrSender.sendRC6(signal2, 32);  // Enviar 32 bits con RC6
-
-    // Responder al cliente
-    server.send(200, "text/plain", "Señales IR enviadas correctamente.");
+      // Responder al cliente
+      server.send(200, "application/json", "{\"success\":\"Señal IR enviada correctamente.\"}");
+    } else {
+      // Enviar error si el array está vacío
+      server.send(400, "application/json", "{\"error\":\"Array 'rawData' está vacío.\"}");
+    }
   } else {
-    // Enviar error si los parámetros no están presentes
-    server.send(400, "text/plain", "Faltan los parámetros signal1 o signal2.");
+    // Enviar error si no hay datos en el cuerpo de la solicitud
+    server.send(400, "application/json", "{\"error\":\"Falta el cuerpo de la solicitud.\"}");
   }
 }
-
 // Configurar Wi-Fi
 void setupWiFi() {
   delay(100);
