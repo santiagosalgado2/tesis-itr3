@@ -9,8 +9,8 @@ const int irPin = 13;
 WebServer server(80);
 
 // Credenciales de la red Wi-Fi
-const char* ssid = "placa";
-const char* password = "12345678";
+const char* ssid = "RioTel_SalgadO";
+const char* password = "dcfs5411";
 
 // Función para manejar la recepción de señales y enviarlas por IR
 void handleSendIR() {
@@ -77,3 +77,4 @@ void setup() {
 void loop() {
   // Manejar las solicitudes del servidor
   server.handleClient();
+}
