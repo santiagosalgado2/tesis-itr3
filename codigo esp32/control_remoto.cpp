@@ -49,51 +49,7 @@ void handleSendIR() {
     }
   }
   // Validar si se recibieron los argumentos hex y protocol
-  else if (server.hasArg("hex") && server.hasArg("protocol") && server.hasArg("bits")) {
-    String hexValues = server.arg("hex");
-    String protocol = server.arg("protocol");
-    int bits = server.arg("bits").toInt();
-
-    // Dividir el string hexValues por comas si tiene 2 valores
-    std::vector<uint32_t> hexArray;
-    int startIndex = 0;
-    int commaIndex;
-    while ((commaIndex = hexValues.indexOf(',', startIndex)) != -1) {
-      String hexStr = hexValues.substring(startIndex, commaIndex);
-      hexArray.push_back(strtoul(hexStr.c_str(), nullptr, 16));  // Convertir a hexadecimal
-      startIndex = commaIndex + 1;
-    }
-    // Agregar el último código hexadecimal si existe
-    if (startIndex < hexValues.length()) {
-      String hexStr = hexValues.substring(startIndex);
-      hexArray.push_back(strtoul(hexStr.c_str(), nullptr, 16));
-    }
-
-    // Verificar que el array hex tenga al menos un valor
-    if (hexArray.size() > 0) {
-      // Emitir la señal dependiendo del protocolo
-      if (protocol == "NEC") {
-        for (uint32_t hexCode : hexArray) {
-          IrSender.sendNEC(hexCode, bits);
-        }
-      } else if (protocol == "Sony") {
-        for (uint32_t hexCode : hexArray) {
-          IrSender.sendSony(hexCode, bits);  // Ejemplo: 12 bits para Sony
-        }
-      } else if (protocol == "RC6"){
-        for (uint32_t hexCode : hexArray) {
-          IrSender.sendRC6(hexCode, bits);  // Ejemplo: 12 bits para Sony
-        }
-      }
-      // Agregar más protocolos si es necesario...
-
-      // Responder al cliente
-      server.send(200, "application/json", "{\"success\":\"Señal IR enviada correctamente con protocolo.\"}");
-    } else {
-      // Enviar error si el array 'hexArray' está vacío
-      server.send(400, "application/json", "{\"error\":\"Array 'hex' está vacío.\"}");
-    }
-  } else {
+  else {
     // Enviar error si no hay datos en el cuerpo de la solicitud o parámetros necesarios
     server.send(400, "application/json", "{\"error\":\"Faltan datos en la solicitud.\"}");
   }
