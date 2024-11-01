@@ -1,14 +1,14 @@
 #include <WiFi.h>
 #include <WebServer.h>
-#include <IRremote.hpp>  // Incluimos la librería IRremote.hpp
-
+#include <IRremote.hpp>  
+//LIBRERIAS USADAS
 // Definir el pin del emisor IR
 const int irPin = 13;
 
 // Crear un objeto WebServer en el puerto 80
 WebServer server(80);
 
-// Credenciales de la red Wi-Fi
+// Datos de la red Wi-Fi
 const char* ssid = "RioTel_SalgadO";
 const char* password = "dcfs5411";
 
@@ -48,7 +48,6 @@ void handleSendIR() {
       server.send(400, "application/json", "{\"error\":\"Array 'rawData' está vacío.\"}");
     }
   }
-  // Validar si se recibieron los argumentos hex y protocol
   else {
     // Enviar error si no hay datos en el cuerpo de la solicitud o parámetros necesarios
     server.send(400, "application/json", "{\"error\":\"Faltan datos en la solicitud.\"}");

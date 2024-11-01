@@ -2,13 +2,13 @@
 #include <esp_wifi.h>
 #include <esp_smartconfig.h>
 #include <HTTPClient.h>
-
+//LIBRERIAS UTILIZADAS
 const char* serverName = "http://192.168.2.151/pagina_web/pagina_web/public/new_esp/receive";
-// REEMPLAZAR POR LA IP DE LA PC HASTA QUE SE HOSTEE LA PAGINA
-String code = "8lIsgR9J";
+// RUTA QUE EJECUTA UN CONTROLADOR DE LA PAGINA WEB
+String code = "8lIsgR9J"; //CODIGO IDENTIFICADOR ALMACENADO EN LA PLACA, ES EL QUE PONE EL USUARIO PARA HACER LA VINCULACION
 
 const int ledParpadeo = 5;  // LED que parpadea mientras se conecta
-const int ledConectado = 14;  // LED que parpadea mientras se conecta
+const int ledConectado = 14;  // LED que queda encendido una vez echa la conexión
 
 
 void setup() {
@@ -63,7 +63,7 @@ void setup() {
 
   // Si la conexión WiFi está establecida, envía la IP al servidor
   if (WiFi.status() == WL_CONNECTED) {
-    digitalWrite(ledConectado, HIGH);  // Enciende LED de parpadeo
+    digitalWrite(ledConectado, HIGH);  // Enciende LED de conexión exitosa
     String espIp = WiFi.localIP().toString();
     
     // Crea un cliente HTTP
