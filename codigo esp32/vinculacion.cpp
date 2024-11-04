@@ -88,5 +88,5 @@ void setup() {
 }
 
 void loop() {
-  // Aquí puedes añadir el código que necesites ejecutar continuamente
+
 }
