@@ -3,7 +3,7 @@
 #include <HTTPClient.h>
 
 // Configuración del receptor IR
-const int RECV_PIN = 26; 
+const int RECV_PIN = 15; 
 IRrecv irrecv(RECV_PIN);
 IRData results;
 
