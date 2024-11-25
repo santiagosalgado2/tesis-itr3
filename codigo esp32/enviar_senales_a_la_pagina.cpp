@@ -3,16 +3,16 @@
 #include <HTTPClient.h>
 
 // Configuración del receptor IR
-const int RECV_PIN = 26; 
+const int RECV_PIN = 15; 
 IRrecv irrecv(RECV_PIN);
 IRData results;
 
 // Configuración de la red WiFi
-const char* ssid = "RioTel_SalgadO";
-const char* password = "dcfs5411";
+const char* ssid = "placa";
+const char* password = "12345678";
 
 // URL de destino
-const char* serverName = "http://192.168.1.105/pagina_web/pagina_web/public/recibir_codigo";
+const char* serverName = "http://192.168.2.119/pagina_web/pagina_web/public/recibir_codigo";
 String code="ABCD1234";
 
 void setup() {
