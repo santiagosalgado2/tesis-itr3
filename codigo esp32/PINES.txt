@@ -5,3 +5,5 @@ ledConectado = 14
 LED IR = 13
 
 RECEPTOR IR = 15
+
+contraseña clever JZmN4Adj*4kqYRi
