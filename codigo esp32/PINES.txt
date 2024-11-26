@@ -7,3 +7,7 @@ LED IR = 13
 RECEPTOR IR = 15
 
 contraseña clever JZmN4Adj*4kqYRi
+
+
+
+rojo 13, amarillo 34, verde 32
