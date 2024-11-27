@@ -10,4 +10,6 @@ contraseña clever JZmN4Adj*4kqYRi
 
 
 
-rojo 13, amarillo 34, verde 32
+rojo 4, amarillo 13, verde 32
+
+EL PIN 34 DE LA ESP NO ANDA
