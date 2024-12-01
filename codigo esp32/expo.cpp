@@ -7,9 +7,9 @@
 #define LED_VERDE 32
 #define IR_RECEIVER_PIN 15
 
-const char* ssid = "placa";
-const char* password = "12345678";
-const char* serverUrl = "http://192.168.2.119/pagina_web/pagina_web/public/expo/actualizar"; // Cambia esto
+const char* ssid = "RioTel_SalgadO";
+const char* password = "dcfs5411";
+const char* serverUrl = "http://192.168.1.105/pagina_web/pagina_web/public/expo/actualizar"; // Cambia esto
 
 void setup() {
     Serial.begin(115200);
@@ -31,27 +31,49 @@ void loop() {
     if (IrReceiver.decode()) {
         uint32_t irCode = IrReceiver.decodedIRData.decodedRawData;
 
-        String estado = "";
         if (irCode == 0xF30CFF00) {
             apagarLeds();
+            enviarEstadoAlServidor("apagado");
+            enviarEstadoAlServidor("rojo");
+            delay(200);
             toggleLed(LED_ROJO);
-            estado = "rojo";
         } else if (irCode == 0xE718FF00) {
             apagarLeds();
+            enviarEstadoAlServidor("apagado");
+            enviarEstadoAlServidor("amarillo");
+            delay(200);
             toggleLed(LED_AMARILLO);
-            estado = "amarillo";
+
         } else if (irCode == 0xA15EFF00) {
             apagarLeds();
+            enviarEstadoAlServidor("apagado");
+            enviarEstadoAlServidor("verde");
+            delay(200);
             toggleLed(LED_VERDE);
-            estado = "verde";
+
         } else if (irCode == 0xBA45FF00) {
-            modoSemaforo();
-            estado = "semaforo";
+            apagarLeds();
+            enviarEstadoAlServidor("apagado");
+            enviarEstadoAlServidor("rojo");
+            delay(200);
+            toggleLed(LED_ROJO);
+            delay(5000);
+            apagarLeds();
+
+            enviarEstadoAlServidor("amarillo");
+            delay(200);
+            toggleLed(LED_AMARILLO);
+            delay(2000);
+            apagarLeds();
+
+            enviarEstadoAlServidor("verde");
+            delay(200);
+            toggleLed(LED_VERDE);
+            delay(5000);
+            apagarLeds();
+            enviarEstadoAlServidor("apagado");
         }
 
-        if (estado != "") {
-            enviarEstadoAlServidor(estado);
-        }
         IrReceiver.resume();
     }
 }
