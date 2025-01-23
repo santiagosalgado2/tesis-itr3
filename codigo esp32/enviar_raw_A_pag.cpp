@@ -75,6 +75,12 @@ void loop() {
     // Procesar para eliminar valores iniciales, signos, el sum y los primeros tres valores
     String cleanedData = processRawData(rawDataStr);
 
+    // Eliminar desde el primer dígito hasta el primer espacio en blanco
+    int firstSpaceIndex = cleanedData.indexOf(" ");
+    if (firstSpaceIndex != -1) {
+      cleanedData = cleanedData.substring(firstSpaceIndex + 1);
+    }
+
     // Imprimir la señal procesada
     Serial.println("Processed IR Signal:");
     Serial.println(cleanedData);
@@ -101,6 +107,12 @@ String processRawData(String rawData) {
   rawData.replace(" ", ""); // Quitar todos los espacios en la cadena
   rawData.replace("\n", ""); // Quitar todos los saltos de línea en la cadena
 
+  // Eliminar el primer valor hasta el primer espacio o salto de línea
+  int firstDelimiterIndex = rawData.indexOf(",");
+  if (firstDelimiterIndex != -1) {
+    rawData = rawData.substring(firstDelimiterIndex + 1);
+  }
+
   // Convertir a un array de números y omitir los primeros tres valores
   String processedData = "";
   int valueCount = 0;
@@ -110,10 +122,15 @@ String processRawData(String rawData) {
     rawData = (commaIndex != -1) ? rawData.substring(commaIndex + 1) : "";
 
     // Validar y procesar el valor
-    if (valueCount >= 3 && value.length() > 0) {
+    if (valueCount >= 0 && value.length() > 0) {
       // Eliminar el signo negativo si existe
       if (value[0] == '-') {
-        value = value.substring(1);
+        value = value.substring(1); // Eliminar el primer carácter si es un signo negativo
+      }
+      // Eliminar todo hasta el primer espacio en blanco
+      int firstSpaceIndex = value.indexOf(' ');
+      if (firstSpaceIndex != -1) {
+        value = value.substring(firstSpaceIndex + 1);
       }
       processedData += (processedData == "" ? "" : ",") + value; // Agregar el valor al resultado
     }
