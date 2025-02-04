@@ -8,7 +8,8 @@
 #include <ArduinoJson.h>
 
 const char* serverName = "http://192.168.1.119/pagina_web/pagina_web/public/new_esp/receive";
-const char* serverNameSignal = "http://192.168.1.119/pagina_web/pagina_web/public/new_esp/receive_signal";
+const char* serverNameSignal = "http://192.168.1.119/pagina_web/pagina_web/public/handle/updateDbsignal";
+const char* serverDeleteData = "http://192.168.1.119/pagina_web/pagina_web/public/handle/deleteData";
 String code = "8lIsgR9J";
 
 const int ledParpadeo = 5;
@@ -141,6 +142,11 @@ void handleTask(const String& task) {
     if (rawData.size() > 0) {
       IrSender.sendRaw(rawData.data(), rawData.size(), 38); // Asegúrate de que la frecuencia sea correcta
       Serial.println("Señal IR enviada correctamente.");
+      HTTPClient http;
+      http.begin(serverDeleteData);
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+      String postData = "code=" + code;
+      int httpResponseCode = http.POST(postData);
     } else {
       Serial.println("Array 'rawData' está vacío.");
     }
