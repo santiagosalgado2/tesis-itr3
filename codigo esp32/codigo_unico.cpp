@@ -5,16 +5,16 @@
 #include <esp_smartconfig.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <ArduinoJson.h>
 
-const char* serverName = "http://192.168.2.151/pagina_web/pagina_web/public/new_esp/receive";
-const char* serverNameSignal = "http://192.168.2.151/pagina_web/pagina_web/public/new_esp/receive_signal";
+const char* serverName = "http://192.168.1.119/pagina_web/pagina_web/public/new_esp/receive";
+const char* serverNameSignal = "http://192.168.1.119/pagina_web/pagina_web/public/new_esp/receive_signal";
 String code = "8lIsgR9J";
 
 const int ledParpadeo = 5;
 const int ledConectado = 14;
 
 IRrecv irrecv(15);
-IRsend irsend(13);
 IRData results;
 
 class StringPrint : public Print {
@@ -74,6 +74,8 @@ void setup() {
     Serial.println(WiFi.localIP());
   }
 
+  IrSender.begin(26);  // Inicializa el objeto IRsend con el pin 13
+
   xTaskCreatePinnedToCore(checkForTasks, "CheckForTasks", 4096, NULL, 1, NULL, 1);
 }
 
@@ -110,10 +112,20 @@ void checkForTasks(void * parameter) {
 }
 
 void handleTask(const String& task) {
-  if (task.indexOf("emitir_senal") != -1) {
-    String rawDataStr = task.substring(task.indexOf("codigo_raw") + 12);
-    rawDataStr = rawDataStr.substring(0, rawDataStr.indexOf("\""));
+  StaticJsonDocument<1024> doc;
+  DeserializationError error = deserializeJson(doc, task);
+
+  if (error) {
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.f_str());
+    return;
+  }
+
+  const char* accion = doc["accion"];
+  if (strcmp(accion, "emitir_senal") == 0) {
+    const char* codigo_raw = doc["codigo_raw"];
     std::vector<uint16_t> rawData;
+    String rawDataStr = String(codigo_raw);
     int startIndex = 0;
     int commaIndex;
     while ((commaIndex = rawDataStr.indexOf(',', startIndex)) != -1) {
@@ -125,13 +137,14 @@ void handleTask(const String& task) {
       String numberStr = rawDataStr.substring(startIndex);
       rawData.push_back(numberStr.toInt());
     }
+
     if (rawData.size() > 0) {
-      irsend.sendRaw(rawData.data(), rawData.size(), 38);
+      IrSender.sendRaw(rawData.data(), rawData.size(), 38); // Asegúrate de que la frecuencia sea correcta
       Serial.println("Señal IR enviada correctamente.");
     } else {
       Serial.println("Array 'rawData' está vacío.");
     }
-  } else if (task.indexOf("grabar_senal") != -1) {
+  } else if (strcmp(accion, "grabar_senal") == 0) {
     irrecv.enableIRIn();
     while (!irrecv.decode()) {
       vTaskDelay(10 / portTICK_PERIOD_MS);
