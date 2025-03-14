@@ -10,9 +10,9 @@
 //HAY QUE PROBAR CON VARIOS DISPOSITIVOS PARA CONFIRMAR SI USAMOS ESTE
 
 
-const char* serverName = "http://192.168.1.105/pagina_web/pagina_web/public/new_esp/receive";
-const char* serverNameSignal = "http://192.168.1.105/pagina_web/pagina_web/public/handle/updateDbsignal";
-const char* serverDeleteData = "http://192.168.1.105/pagina_web/pagina_web/public/handle/deleteData";
+const char* serverName = "http://192.168.2.119/pagina_web/pagina_web/public/new_esp/receive";
+const char* serverNameSignal = "http://192.168.2.119/pagina_web/pagina_web/public/handle/updateDbsignal";
+const char* serverDeleteData = "http://192.168.2.119/pagina_web/pagina_web/public/handle/deleteData";
 String code = "8lIsgR9J";
 
 const int ledParpadeo = 5;
