@@ -131,7 +131,7 @@ void handleTask(const String& task) {
     Serial.println(codigo_raw);
 
     // Define un array para almacenar los datos crudos
-    const int maxRawDataSize = 100; // Ajusta el tamaño según sea necesario
+    const int maxRawDataSize = 500; // Ajusta el tamaño según sea necesario
     uint16_t rawData[maxRawDataSize];
     int rawDataSize = 0;
 
