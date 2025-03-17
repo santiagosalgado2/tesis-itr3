@@ -2,6 +2,7 @@
 #include <IRremoteESP8266.h>
 #include <IRrecv.h>
 #include <IRsend.h>
+#include <IRutils.h>
 #include <HTTPClient.h>
 #include <esp_wifi.h>
 #include <esp_smartconfig.h>
@@ -18,10 +19,32 @@ String code = "8lIsgR9J";
 const int ledParpadeo = 5;
 const int ledConectado = 14;
 
-const uint16_t kRecvPin = 15;
+
 const uint16_t kSendPin = 13;
-IRrecv irrecv(kRecvPin);
+
+
+// Pin donde se conecta el receptor IR
+const uint16_t kRecvPin = 15; // Cambia este pin según tu conexión
+
+// Tamaño del buffer para capturar señales IR
+const uint16_t kCaptureBufferSize = 1024;
+
+// Tiempo de espera para capturar una señal IR (en milisegundos)
+const uint8_t kTimeout = 50;
+
+// Crear una instancia de IRrecv
+IRrecv irrecv(kRecvPin, kCaptureBufferSize, kTimeout, true);
+
+// Variable para almacenar los resultados de la captura
+
+// Variables para almacenar los valores capturados
+String protocolo;
+String codigoHex;
+String bits;
+
 IRsend irsend(kSendPin);
+
+
 decode_results results;
 
 class StringPrint : public Print {
@@ -39,6 +62,7 @@ public:
 
 void setup() {
   Serial.begin(115200);
+  irrecv.enableIRIn();
   pinMode(ledParpadeo, OUTPUT);
   pinMode(ledConectado, OUTPUT);
 
@@ -135,7 +159,7 @@ void handleTask(const String& task) {
     Serial.println(bits);
 
     // Define un array para almacenar los datos crudos
- Serial.print("Hexadecimal recibido: ");
+  Serial.print("Hexadecimal recibido: ");
   Serial.println(hexadecimal);
   Serial.print("Protocolo recibido: ");
   Serial.println(protocolo);
@@ -390,42 +414,35 @@ void handleTask(const String& task) {
       Serial.println(httpResponseCode);
 
  } else if (strcmp(accion, "grabar_senal") == 0) {
-    irrecv.enableIRIn();
+    Serial.println("hola");
+
+    Serial.println("hola");
     while (!irrecv.decode(&results)) {
-      delay(10);
+      delay(100);
     }
-    String rawDataStr = decodeIRResultToRaw(results);
-    String cleanedData = processRawData(rawDataStr);
-    int firstSpaceIndex = cleanedData.indexOf(" ");
-    if (firstSpaceIndex != -1) {
-      cleanedData = cleanedData.substring(firstSpaceIndex + 1);
-    }
-    sendIRCodeRaw(cleanedData);
+    protocolo = typeToString(results.decode_type);
+    codigoHex = resultToHexidecimal(&results); // Eliminar el segundo argumento
+    bits = String(results.bits);
+
+    // Imprimir los valores almacenados en las variables
+    Serial.println("Protocolo: " + protocolo);
+    Serial.println("Código Hexadecimal: " + codigoHex);
+    Serial.println("Bits: " + bits);
+
+    // Enviar los datos a la función PHP
+    sendIRCode(protocolo, codigoHex, bits);
+
+    // Reiniciar el receptor para capturar la siguiente señal
     irrecv.resume();
   }
 }
 
-String decodeIRResultToRaw(decode_results results) {
-  String rawDataStr = "";
-  for (int i = 1; i < results.rawlen; i++) {
-    if (i % 2) {  // Mark
-      rawDataStr += results.rawbuf[i] * kRawTick;
-    } else {  // Space
-      rawDataStr += -results.rawbuf[i] * kRawTick;
-    }
-    if (i < results.rawlen - 1) {
-      rawDataStr += ",";
-    }
-  }
-  return rawDataStr;
-}
-
-void sendIRCodeRaw(const String& rawDataStr) {
+void sendIRCode(const String& protocolo, const String& codigoHex, const String& bits) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     http.begin(serverNameSignal);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    String postData = "code=" + code + "&irCode=" + rawDataStr;
+    String postData = "protocolo=" + protocolo + "&codigoHex=" + codigoHex + "&bits=" + bits + "&code=" + code;
     int httpResponseCode = http.POST(postData);
     if (httpResponseCode > 0) {
       Serial.println("Response Code: " + String(httpResponseCode));
@@ -439,37 +456,3 @@ void sendIRCodeRaw(const String& rawDataStr) {
   }
 }
 
-String processRawData(String rawData) {
-  int startIndex = rawData.indexOf("]:") + 2;
-  int sumIndex = rawData.indexOf("Sum:");
-  if (sumIndex > 0) {
-    rawData = rawData.substring(startIndex, sumIndex);
-  } else {
-    rawData = rawData.substring(startIndex);
-  }
-  rawData.replace(" ", "");
-  rawData.replace("\n", "");
-  int firstDelimiterIndex = rawData.indexOf(",");
-  if (firstDelimiterIndex != -1) {
-    rawData = rawData.substring(firstDelimiterIndex + 1);
-  }
-  String processedData = "";
-  int valueCount = 0;
-  while (rawData.length() > 0) {
-    int commaIndex = rawData.indexOf(",");
-    String value = (commaIndex != -1) ? rawData.substring(0, commaIndex) : rawData;
-    rawData = (commaIndex != -1) ? rawData.substring(commaIndex + 1) : "";
-    if (valueCount >= 0 && value.length() > 0) {
-      if (value[0] == '-') {
-        value = value.substring(1);
-      }
-      int firstSpaceIndex = value.indexOf(' ');
-      if (firstSpaceIndex != -1) {
-        value = value.substring(firstSpaceIndex + 1);
-      }
-      processedData += (processedData == "" ? "" : ",") + value;
-    }
-    valueCount++;
-  }
-  return processedData;
-}
