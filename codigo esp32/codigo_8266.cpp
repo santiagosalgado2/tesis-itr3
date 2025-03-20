@@ -11,9 +11,9 @@
 // HASTA AHORA ESTE ES EL CODIGO QUE ANDUVO TODO. EL OTRO NO EMITIIA BIEN LAS SEÑALES PORQUE EL FREERTOS LAS INTERRUMPIA
 // HAY QUE PROBAR CON VARIOS DISPOSITIVOS PARA CONFIRMAR SI USAMOS ESTE
 
-const char* serverName = "http://192.168.1.105/pagina_web/pagina_web/public/new_esp/receive";
-const char* serverNameSignal = "http://192.168.1.105/pagina_web/pagina_web/public/handle/updateDbsignal";
-const char* serverDeleteData = "http://192.168.1.105/pagina_web/pagina_web/public/handle/deleteData";
+const char* serverName = "http://192.168.1.119/pagina_web/pagina_web/public/new_esp/receive";
+const char* serverNameSignal = "http://192.168.1.119/pagina_web/pagina_web/public/handle/updateDbsignal";
+const char* serverDeleteData = "http://192.168.1.119/pagina_web/pagina_web/public/handle/deleteData";
 String code = "8lIsgR9J";
 
 const int ledParpadeo = 5;
@@ -189,7 +189,7 @@ void handleTask(const String& task) {
   } else if (strcmp(protocolo, "PANASONIC") == 0) {
     irsend.sendPanasonic(0x4004, hexValue); // Panasonic usa un parámetro adicional
   } else if (strcmp(protocolo, "SAMSUNG") == 0) {
-    irsend.sendSamsung36(hexValue, bitValue);
+    irsend.sendSAMSUNG(hexValue, bitValue);
   } else if (strcmp(protocolo, "AIRTON") == 0) {
     irsend.sendAirton(hexValue, bitValue);
   } else if (strcmp(protocolo, "AIRWELL") == 0) {
@@ -206,7 +206,7 @@ void handleTask(const String& task) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
     irsend.sendBosch144(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "COOLIX") == 0) {
-    irsend.sendCoolix48(hexValue, bitValue);
+    irsend.sendCOOLIX(hexValue, bitValue);
   } else if (strcmp(protocolo, "CORONA_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
     irsend.sendCoronaAc(data, sizeof(data), bitValue);
@@ -455,4 +455,3 @@ void sendIRCode(const String& protocolo, const String& codigoHex, const String& 
     Serial.println("WiFi Disconnected");
   }
 }
-
