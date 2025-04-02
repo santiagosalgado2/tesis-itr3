@@ -11,9 +11,9 @@
 // HASTA AHORA ESTE ES EL CODIGO QUE ANDUVO TODO. EL OTRO NO EMITIIA BIEN LAS SEÑALES PORQUE EL FREERTOS LAS INTERRUMPIA
 // HAY QUE PROBAR CON VARIOS DISPOSITIVOS PARA CONFIRMAR SI USAMOS ESTE
 
-const char* serverName = "http://192.168.1.119/pagina_web/pagina_web/public/new_esp/receive";
-const char* serverNameSignal = "http://192.168.1.119/pagina_web/pagina_web/public/handle/updateDbsignal";
-const char* serverDeleteData = "http://192.168.1.119/pagina_web/pagina_web/public/handle/deleteData";
+const char* serverName = "http://18.228.2.33/new_esp/receive";
+const char* serverNameSignal = "http://18.228.2.33/handle/updateDbsignal";
+const char* serverDeleteData = "http://18.228.2.33/handle/deleteData";
 String code = "8lIsgR9J";
 
 const int ledParpadeo = 5;
