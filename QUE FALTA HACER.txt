@@ -1,26 +1,48 @@
---------------COSAS QUE FALTAN PARA PRACTICAMENTE TERMINAR--------------
+--CRON JOBS DEL SERVIDOR
+
+Son rutas que se ejecutan automáticamente por el servidor. Para esto hay que programar los controladores y configurar las rutas en el servidor de Linux
+Son utiles para varias cosas, estos son algunos que hay que hacer
+
+
+#Controlar si un usuario profesor creó su contraseña. Si paso 24 horas sin crearla, se elimina el usuario y se notifica al
+administrador que lo creó. Para evitar sobrecarga en la BD
+
+#Controlar si una vez completado el formulario para registrar una nueva Esp32, se completó la vinculación
+(es decir se conectó la placa a WiFi). Si pasa por ejemplo media hora, se borra el registro y se notifica al usuario
+para que vuelva a completar el formulario
+
+#Hay 2 que ya están configurados como eventos en la base de datos. El de actualizar el estado de la Esp32 (si pasan 3 minutos sin que 
+la esp mande una request quiere decir que está desconectada). Y el de eliminar codigos de verificacion expirados/usados
 
 
 
--RESOLVER COMO VAMOS A TRABAJAR LOS AIRES ACONDICIONADOS. POR RAW ES MUY DIFICIL, PORQUE CADA VEZ QUE SE TOCA UN BOTON DEL CONTROL DEL AIRE, SE ENVIA TODA LA INFORMACION COMPLETA, POR LO QUE ES IMPOSIBLE GRABAR ACCION POR ACCION CON SEÑALES INDIVIDUALES COMO HACEMOS CON TELES Y VENTILADORES. LA FORMA QUE PIENSO ES TRABAJAR POR PROTOCOLO, YA QUE AHI SI ES POSIBLE ENVIAR ACCION POR ACCION Y NO HACE FALTA NI SIQUIERA GRABAR LAS SEÑALES, YA QUE DESDE LA MISMA LIBRERIA PODES MANDAR LA ORDEN PARA APAGAR, TEMPERATURA, ETC. CONOCIENDO EL PROTOCOLO. EL PROBLEMA DE ESTO ES QUE NO ES COMPATIBLE CON CUALQUIER AIRE, PERO ES LA SOLUCION MAS FACTIBLE QUE ENCUENTRO. VAMOS A TENER (EN CASO DE TRABAJAR DE ESTA MANERA) QUE BUSCAR UN AIRE COMPATIBLE, QUE NO SE SI VA A SER TAN FACIL
+--CONFIGURACIONES DE SEGURIDAD Y MEJORAS EN ALGUNAS CUESTIONES
+
+#Por ejemplo, se me ocurrió que el usuario tenga un límite de creación de usuarios diario. También podríamos poner un límite para dar de 
+alta dispositivos IR vinculados a una misma Esp32. También para evitar sobrecarga en la BD
+
+#También hay que configurar que no se pueda dar de alta dispositivos IR con un mismo nombre dentro de la misma Esp32
+
+#Hacer los filtros asi quedan seguras las rutas
+
+#Hacer vistas de errores en caso de que al usuario le aparezca una excepcion (asi nomas, por lo menos que esten en español
+y listo)
 
 
--COMPRAR Y PROBAR LEDS MAS PRECISOS, PARA VER SI PUEDE FUNCIONAR LO MAS PARECIDO A UN CONTROL REMOTO NORMAL. YA BUSQUE MAS O MENOS QUE HAY QUE COMPRAR. EN CASO DE QUE SEA LO MISMO O DE QUE NO MEJORE MUCHO LO DEVOLVEMOS ASI NO GASTAMOS PLATA AL PEDO, PERO DEBERIA ANDAR BIEN.
+--COMPRA DE LEDS PRECISOS/USO DE 3 LEDS
+
+#Comprar leds precisos e ir pensando el diseño del producto. Esto porque la idea inicial era que tenga 3 leds.
+Habria que poner en la pagina que el usuario setee con que led quiere manejar cada dispositivo. Esto es facil lo unico es que hay que 
+volver a gastar plata
 
 
--DEFINIR COMO VAMOS A ARMAR EL PRODUCTO FINAL. QUE FORMA VA A TENER, COMO VAMOS A ESCONDER LA PLAQUITA, SI HACE FALTA SOLDAR O NO (OJALA QUE NO) Y LO MAS IMPORTANTE COMO LO VAMOS A ALIMENTAR (PILAS, CABLE A LA CORRIENTE, ETC. (ESTO YO LO HABLARIA CON UN PROFESOR)). EN CASO DE QUE ACA DECIDAMOS USAR 3 LEDS COMO HABIAMOS PLANEADO AL PRINCIPIO, HAY QUE AÑADIR UNA PEQUEÑA MODIFICACION EN LA BD Y EN LA PAGINA PARA PODER ASIGNARLE A CADA DISPOSITIVO IR UN LED ESPECIFICO, ESTO ES UNA BOLUDEZ SE HACE EN 10 MINUTOS PERO NO HAY QUE OLVIDARSE.
+--FUNCIONALIDAD 
+
+#Se me ocurrió que el administrador pueda programar el envio de señales. Por ejemplo, que la directora setee desde 
+su usuario que todos los aires se enciendan a las 14 de lunes a viernes y se apaguen a las 20
+Esto es lo unico que nos llevaria un poco mas de tiempo, porque hay que hacer vistas y ver como almacenar la info de las
+configuraciones. Capaz tambien podamos usar cron jobs
 
 
--PARALELAMENTE, SEGUIR MEJORANDO LA PAGINA (DISEÑOS, MENSAJES P/ EL USUARIO, FILTROS, OPTIMIZACION, LANDING PAGE EN EL INICIO, ETC.). LAS FUNCIONALIDADES (QUE ES LO MAS IMPORTANTE Y LO QUE MAS TIEMPO LLEVA) ESTAN TODAS PRACTICAMENTE TERMINADAS, SOLO FALTARIA LA DE EMISION Y RECEPCION DE SEÑALES DEL AIRE (QUE PROGRAMARLO VA A SER MAS FACIL PORQUE YA ESTAN HECHAS LAS FUNCIONALIDADES DEL TELE Y VENTILADOR). DESPUES TODO EL TIEMPO PODEMOS IR VIENDO COSAS PARA MEJORARLE, PERO VAN A SER COSAS CADA VEZ MAS SECUNDARIAS. 
-
-
--UNA VEZ HECHO TODO ESTO, HAY QUE HACER MUCHO TESTING, PARA PODER ENCONTRAR Y ARREGLAR ERRORES QUE VAYAN APARECIENDO. ACA PODEMOS LLAMAR A ALGUNO DE LOS GORDOS (MENOS EL JOEL) O A ALGUN PROFE PARA QUE NOS HAGA DE USUARIO
-
----------------------------------------------------------------------------------------------------------
-
-BASICAMENTE NO NOS QUEDA MUCHO EN CUANTO A LO TECNICO (QUE SERIA ESTO). LO PRIMORDIAL AHORA ES HACER LOS PRIMEROS 3 PUNTOS, LOS OTROS 2 LOS VAMOS A IR HACIENDO INCONSCIENTEMENTE, Y SEGURAMENTE NOS SOBRE TIEMPO PARA HACERLO MAS CERCA DE LA FECHA DE RENDIR. A ESTO HAY QUE SUMARLE EL INFORME QUE NOS PIDAN QUE TODAVIA NO SABEMOS COMO ES ASI QUE NO LO CUENTO POR AHORA. (LOGICAMENTE PUEDEN IR APARECIENDO COSAS NUEVAS PERO LO VAMOS MANEJANDO. PODEMOS USAR ESTE TXT PARA IR GUIANDONOS)
-
-HAY QUE APROVECHAR Y RUSHEAR AHORA A PRINCIPIO DE AÑO QUE NO TENEMOS TANTAS COSAS (PASANTIA, FORO Y TODO ESO). ASI DESPUES CUANDO LLEGUE TODO ESO YA ESTAMOS 
-PERDON SI ESCRIBI MUCHO
-
-https://docs.google.com/document/d/1y9w7Jdo-b69Wt6EIrvnhkef3Fe44hjGQXyKu3UBj-l8/edit?tab=t.0
+Sacando el ultimo punto, son todas cosas que podemos hacer en 1/2 dias. Son detalles que podemos agregarle para que quede mas completo
+Seguramente vayan apareciendo nuevas cosas pero yo por ahora arrancaria con esto y con el informe asi nos lo vamos sacando de encima
