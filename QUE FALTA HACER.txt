@@ -25,6 +25,8 @@ alta dispositivos IR vinculados a una misma Esp32. También para evitar sobrecar
 
 #Hacer los filtros asi quedan seguras las rutas
 
+#Hacer las vistas de instructivos
+
 #Hacer vistas de errores en caso de que al usuario le aparezca una excepcion (asi nomas, por lo menos que esten en español
 y listo)
 
