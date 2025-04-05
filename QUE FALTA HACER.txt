@@ -28,6 +28,8 @@ alta dispositivos IR vinculados a una misma Esp32. También para evitar sobrecar
 #Hacer vistas de errores en caso de que al usuario le aparezca una excepcion (asi nomas, por lo menos que esten en español
 y listo)
 
+#Reprogramar la vinculación para no usar archivo csv. Simplemente usar la base de datos
+
 
 --COMPRA DE LEDS PRECISOS/USO DE 3 LEDS
 
