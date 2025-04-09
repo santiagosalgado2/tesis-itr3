@@ -5,7 +5,7 @@ Son utiles para varias cosas, estos son algunos que hay que hacer
 
 
 #Controlar si un usuario profesor creó su contraseña. Si paso 24 horas sin crearla, se elimina el usuario y se notifica al
-administrador que lo creó. Para evitar sobrecarga en la BD
+administrador que lo creó. Para evitar sobrecarga en la BD ---> HECHO
 
 #Controlar si una vez completado el formulario para registrar una nueva Esp32, se completó la vinculación
 (es decir se conectó la placa a WiFi). Si pasa por ejemplo media hora, se borra el registro y se notifica al usuario
