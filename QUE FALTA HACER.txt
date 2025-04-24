@@ -11,15 +11,17 @@ administrador que lo creó. Para evitar sobrecarga en la BD ---> HECHO, PROBARLO
 (es decir se conectó la placa a WiFi). Si pasa por ejemplo media hora, se borra el registro y se notifica al usuario
 para que vuelva a completar el formulario --> HECHO POR EL MOMENTO; HAY QUE REPROGRAMAR LA VINCULACION PARA HACERLO POR LA BD
 
+#Si un usuario registra un dispositivo en una Esp32 y despues de X cantidad de tiempo no guarda ninguna señal, se borra
+
 #Hay 2 que ya están configurados como eventos en la base de datos. El de actualizar el estado de la Esp32 (si pasan 3 minutos sin que 
-la esp mande una request quiere decir que está desconectada). Y el de eliminar codigos de verificacion expirados/usados
+la esp mande una request quiere decir que está desconectada). Y el de eliminar codigos de verificacion expirados/usados --> HECHO
 
 
 
 --CONFIGURACIONES DE SEGURIDAD Y MEJORAS EN ALGUNAS CUESTIONES
 
 #Por ejemplo, se me ocurrió que el usuario tenga un límite de creación de usuarios diario (HECHO). También podríamos poner un límite para dar de 
-alta dispositivos IR vinculados a una misma Esp32.
+alta dispositivos IR vinculados a una misma Esp32 (puede ser diario tambien o definitivo).
 
 #También hay que configurar que no se pueda dar de alta dispositivos IR con un mismo nombre dentro de la misma Esp32
 
@@ -45,7 +47,8 @@ volver a gastar plata
 #Se me ocurrió que el administrador pueda programar el envio de señales. Por ejemplo, que la directora setee desde 
 su usuario que todos los aires se enciendan a las 14 de lunes a viernes y se apaguen a las 20
 Esto es lo unico que nos llevaria un poco mas de tiempo, porque hay que hacer vistas y ver como almacenar la info de las
-configuraciones. Capaz tambien podamos usar cron jobs
+configuraciones. Capaz tambien podamos usar cron jobs --> HECHO TODO EL CRD (EL UPDATE ME PARECIO INNECESARIO). SOLO FALTA HACER BIEN UNA VALIDACION PARA
+QUE NO SE SUPERPONGAN LOS CRONS
 
 
 Sacando el ultimo punto, son todas cosas que podemos hacer en 1/2 dias. Son detalles que podemos agregarle para que quede mas completo
