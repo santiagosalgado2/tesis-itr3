@@ -11,7 +11,7 @@ administrador que lo creó. Para evitar sobrecarga en la BD ---> HECHO, PROBARLO
 (es decir se conectó la placa a WiFi). Si pasa por ejemplo media hora, se borra el registro y se notifica al usuario
 para que vuelva a completar el formulario --> HECHO POR EL MOMENTO; HAY QUE REPROGRAMAR LA VINCULACION PARA HACERLO POR LA BD; AGREGUE UN CODIGO NUEVO(NO C QUE TAN BIEN ESTA) PARA VER CUAL CONVIENE 
 
-#Si un usuario registra un dispositivo en una Esp32 y despues de X cantidad de tiempo no guarda ninguna señal, se borra
+#Si un usuario registra un dispositivo en una Esp32 y despues de X cantidad de tiempo no guarda ninguna señal, se borra --> HECHO; SE BORRA CADA 24 HORAS
 
 #Hay 2 que ya están configurados como eventos en la base de datos. El de actualizar el estado de la Esp32 (si pasan 3 minutos sin que 
 la esp mande una request quiere decir que está desconectada). Y el de eliminar codigos de verificacion expirados/usados --> HECHO
