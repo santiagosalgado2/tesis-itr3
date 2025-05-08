@@ -25,9 +25,9 @@ alta dispositivos IR vinculados a una misma Esp32 (puede ser diario tambien o de
 
 #También hay que configurar que no se pueda dar de alta dispositivos IR con un mismo nombre dentro de la misma Esp32 -->HECHO
 
-#Hacer los filtros asi quedan seguras las rutas
+#Hacer los filtros asi quedan seguras las rutas --> PRACTICAMENTE TERMINADO, PUEDE MAS ADELANTE APARECER ALGUN OTRO FILTRO
 
-#Hacer las vistas de instructivos-->Ya estan las dos vistas fijarse si estan bien las intrucciones si faltan o si estan bien explicadas 
+#Hacer las vistas de instructivos-->Ya estan las dos vistas fijarse si estan bien las intrucciones si faltan o si estan bien explicadas ---->HECHO
 
 
 #Reprogramar la vinculación para no usar archivo csv. Simplemente usar la base de datos ---->HECHO
