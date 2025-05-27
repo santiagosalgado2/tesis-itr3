@@ -20,7 +20,7 @@ const int ledParpadeo = 5;
 const int ledConectado = 14;
 
 
-const uint16_t kSendPin = 13;
+const uint16_t kSendPin = 13; // 16 y 22 los otros 2, para cuando se haga
 
 
 // Pin donde se conecta el receptor IR
