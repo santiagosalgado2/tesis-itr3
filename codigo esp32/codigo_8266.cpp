@@ -21,7 +21,7 @@ const int ledConectado = 14;
 
 
 const uint16_t kSendPin1 = 16;
-const uint16_t kSendPin2 = 32;
+const uint16_t kSendPin2 = 17;
 const uint16_t kSendPin3 = 22;
 
 // Pin donde se conecta el receptor IR
@@ -158,8 +158,7 @@ void handleTask(const String& task) {
     const char* hexadecimal = doc["hexadecimal"];
     const char* protocolo= doc["protocolo"];
     const char* bits= doc["bits"];
-    int led = doc["led"] | 1;
-    Serial.print("Hexadecimal recibido: ");
+int led = doc["led"] ? int(doc["led"]) : 1;    Serial.print("Hexadecimal recibido: ");
     Serial.println(hexadecimal);
     Serial.print("Protocolo recibido: ");
     Serial.println(protocolo);
