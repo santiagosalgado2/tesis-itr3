@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <IRremoteESP8266.h>
 #include <IRrecv.h>
-#include <IRsend.h>
+#include <irsend.h>
 #include <IRutils.h>
 #include <HTTPClient.h>
 #include <esp_wifi.h>
@@ -20,8 +20,9 @@ const int ledParpadeo = 5;
 const int ledConectado = 14;
 
 
-const uint16_t kSendPin = 13; // 16 y 22 los otros 2, para cuando se haga
-
+const uint16_t kSendPin1 = 16;
+const uint16_t kSendPin2 = 32;
+const uint16_t kSendPin3 = 22;
 
 // Pin donde se conecta el receptor IR
 const uint16_t kRecvPin = 15; // Cambia este pin según tu conexión
@@ -42,8 +43,9 @@ String protocolo;
 String codigoHex;
 String bits;
 
-IRsend irsend(kSendPin);
-
+IRsend irsend1(kSendPin1);
+IRsend irsend2(kSendPin2);
+IRsend irsend3(kSendPin3);
 
 decode_results results;
 
@@ -105,7 +107,10 @@ void setup() {
     Serial.println(WiFi.localIP());
   }
 
-  irsend.begin();  // Inicializa el objeto IRsend
+  
+  irsend1.begin();
+  irsend2.begin();
+  irsend3.begin();  // Inicializa el objeto IRsend
 }
 
 void loop() {
@@ -153,10 +158,15 @@ void handleTask(const String& task) {
     const char* hexadecimal = doc["hexadecimal"];
     const char* protocolo= doc["protocolo"];
     const char* bits= doc["bits"];
+    int led = doc["led"] | 1;
     Serial.print("Hexadecimal recibido: ");
     Serial.println(hexadecimal);
+    Serial.print("Protocolo recibido: ");
     Serial.println(protocolo);
+    Serial.print("Bits recibidos: ");
     Serial.println(bits);
+    Serial.print("Led recibido: ");
+    Serial.println(led);
 
     // Define un array para almacenar los datos crudos
   Serial.print("Hexadecimal recibido: ");
@@ -177,230 +187,234 @@ void handleTask(const String& task) {
     data[2] = (hexValue >> 8) & 0xFF;
     data[3] = hexValue & 0xFF;
 
+    IRsend* irsendPtr = &irsend1;
+    if (led == 2) irsendPtr = &irsend2;
+    else if (led == 3) irsendPtr = &irsend3;
+
   // Enviar señal según el protocolo
   if (strcmp(protocolo, "NEC") == 0) {
-    irsend.sendNEC(hexValue, bitValue);
+    irsendPtr->sendNEC(hexValue, bitValue);
   } else if (strcmp(protocolo, "SONY") == 0) {
-    irsend.sendSony(hexValue, bitValue);
+    irsendPtr->sendSony(hexValue, bitValue);
   } else if (strcmp(protocolo, "RC5") == 0) {
-    irsend.sendRC5(hexValue, bitValue);
+    irsendPtr->sendRC5(hexValue, bitValue);
   } else if (strcmp(protocolo, "RC6") == 0) {
-    irsend.sendRC6(hexValue, bitValue);
+    irsendPtr->sendRC6(hexValue, bitValue);
   } else if (strcmp(protocolo, "PANASONIC") == 0) {
-    irsend.sendPanasonic(0x4004, hexValue); // Panasonic usa un parámetro adicional
+    irsendPtr->sendPanasonic(0x4004, hexValue); // Panasonic usa un parámetro adicional
   } else if (strcmp(protocolo, "SAMSUNG") == 0) {
-    irsend.sendSAMSUNG(hexValue, bitValue);
+    irsendPtr->sendSAMSUNG(hexValue, bitValue);
   } else if (strcmp(protocolo, "AIRTON") == 0) {
-    irsend.sendAirton(hexValue, bitValue);
+    irsendPtr->sendAirton(hexValue, bitValue);
   } else if (strcmp(protocolo, "AIRWELL") == 0) {
-    irsend.sendAirwell(hexValue, bitValue);
+    irsendPtr->sendAirwell(hexValue, bitValue);
   } else if (strcmp(protocolo, "AIWA_RC_T501") == 0) {
-    irsend.sendAiwaRCT501(hexValue, bitValue);
+    irsendPtr->sendAiwaRCT501(hexValue, bitValue);
   } else if (strcmp(protocolo, "AMCOR") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendAmcor(data, sizeof(data), bitValue);
+    irsendPtr->sendAmcor(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "ARGO") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendArgo(data, sizeof(data), bitValue, false);
+    irsendPtr->sendArgo(data, sizeof(data), bitValue, false);
   } else if (strcmp(protocolo, "BOSCH144") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendBosch144(data, sizeof(data), bitValue);
+    irsendPtr->sendBosch144(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "COOLIX") == 0) {
-    irsend.sendCOOLIX(hexValue, bitValue);
+    irsendPtr->sendCOOLIX(hexValue, bitValue);
   } else if (strcmp(protocolo, "CORONA_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendCoronaAc(data, sizeof(data), bitValue);
+    irsendPtr->sendCoronaAc(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "DAIKIN") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendDaikin(data, sizeof(data), bitValue);
+    irsendPtr->sendDaikin(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "DELONGHI_AC") == 0) {
-    irsend.sendDelonghiAc(hexValue, bitValue);
+    irsendPtr->sendDelonghiAc(hexValue, bitValue);
   } else if (strcmp(protocolo, "DISH") == 0) {
-    irsend.sendDISH(hexValue, bitValue);
+    irsendPtr->sendDISH(hexValue, bitValue);
   } else if (strcmp(protocolo, "DOSHISHA") == 0) {
-    irsend.sendDoshisha(hexValue, bitValue);
+    irsendPtr->sendDoshisha(hexValue, bitValue);
   } else if (strcmp(protocolo, "ECOCLIM") == 0) {
-    irsend.sendEcoclim(hexValue, bitValue);
+    irsendPtr->sendEcoclim(hexValue, bitValue);
   } else if (strcmp(protocolo, "ELECTRA_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendElectraAC(data, sizeof(data), bitValue);
+    irsendPtr->sendElectraAC(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "ELITESCREENS") == 0) {
-    irsend.sendElitescreens(hexValue, bitValue);
+    irsendPtr->sendElitescreens(hexValue, bitValue);
   } else if (strcmp(protocolo, "EPSON") == 0) {
-    irsend.sendEpson(hexValue, bitValue);
+    irsendPtr->sendEpson(hexValue, bitValue);
   } else if (strcmp(protocolo, "FUJITSU_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendFujitsuAC(data, sizeof(data), bitValue);
+    irsendPtr->sendFujitsuAC(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "GICABLE") == 0) {
-    irsend.sendGICable(hexValue, bitValue);
+    irsendPtr->sendGICable(hexValue, bitValue);
   } else if (strcmp(protocolo, "GOODWEATHER") == 0) {
-    irsend.sendGoodweather(hexValue, bitValue);
+   irsendPtr->sendGoodweather(hexValue, bitValue);
   } else if (strcmp(protocolo, "GORENJE") == 0) {
-    irsend.sendGorenje(hexValue, bitValue);
+    irsendPtr->sendGorenje(hexValue, bitValue);
   } else if (strcmp(protocolo, "GREE") == 0) {
-    irsend.sendGree(hexValue, bitValue);
+    irsendPtr->sendGree(hexValue, bitValue);
   } else if (strcmp(protocolo, "HAIER_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendHaierAC(data, sizeof(data), bitValue);
+    irsendPtr->sendHaierAC(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "HAIER_AC160") == 0) {
-    irsend.sendHaierAC160(data, bitValue);
+    irsendPtr->sendHaierAC160(data, bitValue);
   } else if (strcmp(protocolo, "HAIER_AC176") == 0) {
-    irsend.sendHaierAC176(data, bitValue);
+    irsendPtr->sendHaierAC176(data, bitValue);
   } else if (strcmp(protocolo, "HAIER_AC_YRW02") == 0) {
-    irsend.sendHaierACYRW02(data, bitValue);
+    irsendPtr->sendHaierACYRW02(data, bitValue);
   } else if (strcmp(protocolo, "HITACHI_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendHitachiAC(data, sizeof(data), bitValue);
+    irsendPtr->sendHitachiAC(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "HITACHI_AC1") == 0) {
-    irsend.sendHitachiAC1(data, bitValue);
+    irsendPtr->sendHitachiAC1(data, bitValue);
   } else if (strcmp(protocolo, "HITACHI_AC2") == 0) {
-    irsend.sendHitachiAC2(data, bitValue);
+    irsendPtr->sendHitachiAC2(data, bitValue);
   } else if (strcmp(protocolo, "HITACHI_AC264") == 0) {
-    irsend.sendHitachiAc264(data, bitValue);
+    irsendPtr->sendHitachiAc264(data, bitValue);
   } else if (strcmp(protocolo, "HITACHI_AC296") == 0) {
-    irsend.sendHitachiAc296(data, bitValue);
+    irsendPtr->sendHitachiAc296(data, bitValue);
   } else if (strcmp(protocolo, "HITACHI_AC3") == 0) {
-    irsend.sendHitachiAC(data, bitValue);
+    irsendPtr->sendHitachiAC(data, bitValue);
   } else if (strcmp(protocolo, "HITACHI_AC344") == 0) {
-    irsend.sendHitachiAc344(data, bitValue);
+    irsendPtr->sendHitachiAc344(data, bitValue);
   } else if (strcmp(protocolo, "HITACHI_AC424") == 0) {
-    irsend.sendHitachiAc424(data, bitValue);
+    irsendPtr->sendHitachiAc424(data, bitValue);
   } else if (strcmp(protocolo, "INAX") == 0) {
-    irsend.sendInax(hexValue, bitValue);
+    irsendPtr->sendInax(hexValue, bitValue);
   } else if (strcmp(protocolo, "JVC") == 0) {
-    irsend.sendJVC(hexValue, bitValue);
+    irsendPtr->sendJVC(hexValue, bitValue);
   } else if (strcmp(protocolo, "KELON") == 0) {
-    irsend.sendKelon(hexValue, bitValue);
+    irsendPtr->sendKelon(hexValue, bitValue);
   } else if (strcmp(protocolo, "KELON168") == 0) {
-    irsend.sendKelon168(data, bitValue);
+    irsendPtr->sendKelon168(data, bitValue);
   } else if (strcmp(protocolo, "KELVINATOR") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendKelvinator(data, sizeof(data), bitValue);
+    irsendPtr->sendKelvinator(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "LASERTAG") == 0) {
-    irsend.sendLasertag(hexValue, bitValue);
+    irsendPtr->sendLasertag(hexValue, bitValue);
   } else if (strcmp(protocolo, "LEGOPF") == 0) {
-    irsend.sendLegoPf(hexValue, bitValue);
+    irsendPtr->sendLegoPf(hexValue, bitValue);
   } else if (strcmp(protocolo, "LG") == 0) {
-    irsend.sendLG(hexValue, bitValue);
+    irsendPtr->sendLG(hexValue, bitValue);
   } else if (strcmp(protocolo, "LG2") == 0) {
-    irsend.sendLG2(hexValue, bitValue);
+    irsendPtr->sendLG2(hexValue, bitValue);
   } else if (strcmp(protocolo, "LUTRON") == 0) {
-    irsend.sendLutron(hexValue, bitValue);
+    irsendPtr->sendLutron(hexValue, bitValue);
   } else if (strcmp(protocolo, "MAGIQUEST") == 0) {
-    irsend.sendMagiQuest(hexValue, bitValue);
+    irsendPtr->sendMagiQuest(hexValue, bitValue);
   } else if (strcmp(protocolo, "METZ") == 0) {
-    irsend.sendMetz(hexValue, bitValue);
+    irsendPtr->sendMetz(hexValue, bitValue);
   } else if (strcmp(protocolo, "MIDEA") == 0) {
-    irsend.sendMidea(hexValue, bitValue);
+    irsendPtr->sendMidea(hexValue, bitValue);
   } else if (strcmp(protocolo, "MIDEA24") == 0) {
-    irsend.sendMidea24(hexValue, bitValue);
+    irsendPtr->sendMidea24(hexValue, bitValue);
   } else if (strcmp(protocolo, "MILESTAG2") == 0) {
-    irsend.sendMilestag2(hexValue, bitValue);
+    irsendPtr->sendMilestag2(hexValue, bitValue);
   } else if (strcmp(protocolo, "MIRAGE") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendMirage(data, sizeof(data), bitValue);
+    irsendPtr->sendMirage(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "MITSUBISHI") == 0) {
-    irsend.sendMitsubishi(hexValue, bitValue);
+    irsendPtr->sendMitsubishi(hexValue, bitValue);
   } else if (strcmp(protocolo, "MITSUBISHI112") == 0) {
-    irsend.sendMitsubishi112(data, bitValue);
+    irsendPtr->sendMitsubishi112(data, bitValue);
   } else if (strcmp(protocolo, "MITSUBISHI136") == 0) {
-    irsend.sendMitsubishi136(data, bitValue);
+    irsendPtr->sendMitsubishi136(data, bitValue);
   } else if (strcmp(protocolo, "MITSUBISHI2") == 0) {
-    irsend.sendMitsubishi2(hexValue, bitValue);
+    irsendPtr->sendMitsubishi2(hexValue, bitValue);
   } else if (strcmp(protocolo, "MITSUBISHI_AC") == 0) {
-    irsend.sendMitsubishiAC(data, bitValue);
+    irsendPtr->sendMitsubishiAC(data, bitValue);
   } else if (strcmp(protocolo, "MITSUBISHI_HEAVY_152") == 0) {
-    irsend.sendMitsubishiHeavy152(data, bitValue);
+    irsendPtr->sendMitsubishiHeavy152(data, bitValue);
   } else if (strcmp(protocolo, "MITSUBISHI_HEAVY_88") == 0) {
-    irsend.sendMitsubishiHeavy88(data, bitValue);
+    irsendPtr->sendMitsubishiHeavy88(data, bitValue);
   } else if (strcmp(protocolo, "MULTIBRACKETS") == 0) {
-    irsend.sendMultibrackets(hexValue, bitValue);
+    irsendPtr->sendMultibrackets(hexValue, bitValue);
   } else if (strcmp(protocolo, "MWM") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendMWM(data, sizeof(data), bitValue);
+    irsendPtr->sendMWM(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "NEC") == 0) {
-    irsend.sendNEC(hexValue, bitValue);
+    irsendPtr->sendNEC(hexValue, bitValue);
   } else if (strcmp(protocolo, "NEOCLIMA") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendNeoclima(data, sizeof(data), bitValue);
+    irsendPtr->sendNeoclima(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "NIKAI") == 0) {
-    irsend.sendNikai(hexValue, bitValue);
+    irsendPtr->sendNikai(hexValue, bitValue);
   } else if (strcmp(protocolo, "PANASONIC_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendPanasonicAC(data, sizeof(data), bitValue);
+    irsendPtr->sendPanasonicAC(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "PANASONIC_AC32") == 0) {
-    irsend.sendPanasonicAC32(hexValue, bitValue);
+    irsendPtr->sendPanasonicAC32(hexValue, bitValue);
   } else if (strcmp(protocolo, "PIONEER") == 0) {
-    irsend.sendPioneer(hexValue, bitValue);
+    irsendPtr->sendPioneer(hexValue, bitValue);
   } else if (strcmp(protocolo, "RC5") == 0) {
-    irsend.sendRC5(hexValue, bitValue);
+    irsendPtr->sendRC5(hexValue, bitValue);
   } else if (strcmp(protocolo, "RCMM") == 0) {
-    irsend.sendRCMM(hexValue, bitValue);
+    irsendPtr->sendRCMM(hexValue, bitValue);
   } else if (strcmp(protocolo, "RHOSS") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendRhoss(data, sizeof(data), bitValue);
+    irsendPtr->sendRhoss(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "SAMSUNG36") == 0) {
-    irsend.sendSamsung36(hexValue, bitValue);
+    irsendPtr->sendSamsung36(hexValue, bitValue);
   } else if (strcmp(protocolo, "SAMSUNG_AC") == 0) {
-    irsend.sendSamsungAC(data, bitValue);
+    irsendPtr->sendSamsungAC(data, bitValue);
   } else if (strcmp(protocolo, "SANYO_AC") == 0) {
-    irsend.sendSanyoAc(data, bitValue);
+    irsendPtr->sendSanyoAc(data, bitValue);
   } else if (strcmp(protocolo, "SANYO_AC152") == 0) {
-    irsend.sendSanyoAc152(data, bitValue);
+    irsendPtr->sendSanyoAc152(data, bitValue);
   } else if (strcmp(protocolo, "SANYO_AC88") == 0) {
-    irsend.sendSanyoAc88(data, bitValue);
+    irsendPtr->sendSanyoAc88(data, bitValue);
   } else if (strcmp(protocolo, "SANYO_LC7461") == 0) {
-    irsend.sendSanyoLC7461(hexValue, bitValue);
+    irsendPtr->sendSanyoLC7461(hexValue, bitValue);
   } else if (strcmp(protocolo, "SHARP") == 0) {
-    irsend.sendSharp(hexValue, bitValue);
+    irsendPtr->sendSharp(hexValue, bitValue);
   } else if (strcmp(protocolo, "SHARP_AC") == 0) {
-    irsend.sendSharpAc(data, bitValue);
+    irsendPtr->sendSharpAc(data, bitValue);
   } else if (strcmp(protocolo, "SONY") == 0) {
-    irsend.sendSony(hexValue, bitValue);
+    irsendPtr->sendSony(hexValue, bitValue);
   } else if (strcmp(protocolo, "SONY_38K") == 0) {
-    irsend.sendSony38(hexValue, bitValue);
+    irsendPtr->sendSony38(hexValue, bitValue);
   } else if (strcmp(protocolo, "SYMPHONY") == 0) {
-    irsend.sendSymphony(hexValue, bitValue);
+    irsendPtr->sendSymphony(hexValue, bitValue);
   } else if (strcmp(protocolo, "TCL112AC") == 0) {
-    irsend.sendTcl112Ac(data, bitValue);
+    irsendPtr->sendTcl112Ac(data, bitValue);
   } else if (strcmp(protocolo, "TCL96AC") == 0) {
-    irsend.sendTcl96Ac(data, bitValue);
+    irsendPtr->sendTcl96Ac(data, bitValue);
   } else if (strcmp(protocolo, "TCL96AC") == 0) {
-    irsend.sendTcl96Ac(data, bitValue);
+    irsendPtr->sendTcl96Ac(data, bitValue);
   }  else if (strcmp(protocolo, "TECO") == 0) {
-    irsend.sendTeco(hexValue, bitValue);
+    irsendPtr->sendTeco(hexValue, bitValue);
   } else if (strcmp(protocolo, "TEKNOPOINT") == 0) {
-    irsend.sendTeknopoint(data, bitValue);
+    irsendPtr->sendTeknopoint(data, bitValue);
   } else if (strcmp(protocolo, "TOSHIBA_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendToshibaAC(data, sizeof(data), bitValue);
+    irsendPtr->sendToshibaAC(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "TOTO") == 0) {
-    irsend.sendToto(hexValue, bitValue);
+    irsendPtr->sendToto(hexValue, bitValue);
   } else if (strcmp(protocolo, "TRANSCOLD") == 0) {
-    irsend.sendTranscold(hexValue, bitValue);
+    irsendPtr->sendTranscold(hexValue, bitValue);
   } else if (strcmp(protocolo, "TROTEC") == 0) {
-    irsend.sendTrotec(data, bitValue);
+    irsendPtr->sendTrotec(data, bitValue);
   } else if (strcmp(protocolo, "TROTEC_3550") == 0) {
-    irsend.sendTrotec3550(data, bitValue);
+    irsendPtr->sendTrotec3550(data, bitValue);
   } else if (strcmp(protocolo, "TRUMA") == 0) {
-    irsend.sendTruma(hexValue, bitValue);
+    irsendPtr->sendTruma(hexValue, bitValue);
   } else if (strcmp(protocolo, "VESTEL_AC") == 0) {
-    irsend.sendVestelAc(hexValue, bitValue);
+    irsendPtr->sendVestelAc(hexValue, bitValue);
   } else if (strcmp(protocolo, "VOLTAS") == 0) {
-    irsend.sendVoltas(data, bitValue);
+    irsendPtr->sendVoltas(data, bitValue);
   } else if (strcmp(protocolo, "WHIRLPOOL_AC") == 0) {
     uint8_t data[] = { (uint8_t)(hexValue >> 24), (uint8_t)(hexValue >> 16), (uint8_t)(hexValue >> 8), (uint8_t)hexValue };
-    irsend.sendWhirlpoolAC(data, sizeof(data), bitValue);
+    irsendPtr->sendWhirlpoolAC(data, sizeof(data), bitValue);
   } else if (strcmp(protocolo, "WHYNTER") == 0) {
-    irsend.sendWhynter(hexValue, bitValue);
+    irsendPtr->sendWhynter(hexValue, bitValue);
   } else if (strcmp(protocolo, "WOWWEE") == 0) {
-    irsend.sendWowwee(hexValue, bitValue);
+    irsendPtr->sendWowwee(hexValue, bitValue);
   } else if (strcmp(protocolo, "XMP") == 0) {
-    irsend.sendXmp(hexValue, bitValue);
+    irsendPtr->sendXmp(hexValue, bitValue);
   } else if (strcmp(protocolo, "YORK") == 0) {
-    irsend.sendYork(data, bitValue);
+    irsendPtr->sendYork(data, bitValue);
   } else if (strcmp(protocolo, "ZEPEAL") == 0) {
-    irsend.sendZepeal(hexValue, bitValue);
+    irsendPtr->sendZepeal(hexValue, bitValue);
   }else{
     Serial.println("Protocolo no encontrado");
   }
