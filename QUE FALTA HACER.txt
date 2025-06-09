@@ -10,6 +10,8 @@
 
 -Organizar código JS. Ponerlo en archivos separados de las vistas y comentarlo
 
+-En el form de registro, agregar un cartelito que diga los requisitos de contraseña, que aparezca al presionar este campo. Yo lo habia hecho hace mil años pero no se por que no se ve
+
 DESPUES DEL HITO 2, FINALIZAR LO DE ARRIBA SI ES QUE QUEDA ALGO Y SEGUIR CON:
 
 -Armar el producto
