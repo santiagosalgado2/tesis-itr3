@@ -1,53 +1,27 @@
---CRON JOBS DEL SERVIDOR  ------>HECHO; POR LO MENOS LOS PLANTEADOS ACA
+*********ACTUALIZACIÓN DE ESTE ARCHIVO*********
 
-Son rutas que se ejecutan automáticamente por el servidor. Para esto hay que programar los controladores y configurar las rutas en el servidor de Linux
-Son utiles para varias cosas, estos son algunos que hay que hacer
+*PARA IR HACIENDO ANTES DEL HITO 2, ES DECIR DURANTE ESTA SEMANA
 
+-Sincronizar los crons según lo necesite la función (actualmente están todos para que se ejecuten cada 24hrs, hay algunos que necesitan hacerlo antes)
 
-#Controlar si un usuario profesor creó su contraseña. Si paso 24 horas sin crearla, se elimina el usuario y se notifica al
-administrador que lo creó. Para evitar sobrecarga en la BD ---> HECHO
+-Seguir comentando los controladores, falta la parte un poco más paja que es la de la esp, la de los crons, etc. pero es solo comentar
 
-#Controlar si una vez completado el formulario para registrar una nueva Esp32, se completó la vinculación
-(es decir se conectó la placa a WiFi). Si pasa por ejemplo media hora, se borra el registro y se notifica al usuario
-para que vuelva a completar el formulario --> HECHO POR EL MOMENTO; HAY QUE REPROGRAMAR LA VINCULACION PARA HACERLO POR LA BD; AGREGUE UN CODIGO NUEVO(NO C QUE TAN BIEN ESTA) PARA VER CUAL CONVIENE ---> HECHO Y FUNCIONANDO
+-Validar TODOS los formularios a nivel back, es decir, que todos los controladores que se ejecuten a partir del envío de datos por un formulario deben tener una validación de que estos datos están, porque el required a nivel front no es suficiente. Esto es muy simple y rápido, hay algunos controladores que ya lo tienen. Se puede hacer con filtros (que capaz queda mas organizado y optimizado, pero por ahí para la pagina nuestra no es lo ideal) o directamente en cada controlador. De cualquiera de las 2 formas está bien lo importante es que ande
 
-#Si un usuario registra un dispositivo en una Esp32 y despues de X cantidad de tiempo no guarda ninguna señal, se borra --> HECHO; SE BORRA CADA 24 HORAS
+-Organizar código JS. Ponerlo en archivos separados de las vistas y comentarlo
 
-#Hay 2 que ya están configurados como eventos en la base de datos. El de actualizar el estado de la Esp32 (si pasan 3 minutos sin que 
-la esp mande una request quiere decir que está desconectada). Y el de eliminar codigos de verificacion expirados/usados --> HECHO
+DESPUES DEL HITO 2, FINALIZAR LO DE ARRIBA SI ES QUE QUEDA ALGO Y SEGUIR CON:
 
+-Armar el producto
 
+-Adelantar el informe. Para el siguiente hito, lo ideal es tener por lo menos un borrador listo. Es decir, completar todos los puntos e ir corrigiéndolo
 
---CONFIGURACIONES DE SEGURIDAD Y MEJORAS EN ALGUNAS CUESTIONES
+-Detectar y corregir errores
 
-#Por ejemplo, se me ocurrió que el usuario tenga un límite de creación de usuarios diario (HECHO). También podríamos poner un límite para dar de 
-alta dispositivos IR vinculados a una misma Esp32 (puede ser diario tambien o definitivo)  --->HECHO, HASTA 20 DISP.
+-Analizar mejoras. Una que hay que implementar es para la ruta de generación de códigos de verificación por get, ya que cualquier usuario puede generar códigos manualmente poniendo esta ruta de forma manual en el navegador lo que no es bueno. Hay que hacer alguna implementación de tokens.
 
-#También hay que configurar que no se pueda dar de alta dispositivos IR con un mismo nombre dentro de la misma Esp32 -->HECHO
+-Validar bien los eventos antes de ser dados de alta. No se deben superponer sino puede que alguno no se ejecute correctamente
 
-#Hacer los filtros asi quedan seguras las rutas --> PRACTICAMENTE TERMINADO, PUEDE MAS ADELANTE APARECER ALGUN OTRO FILTRO
+-Implementar limitaciones en los CRUDs para que los usuarios no puedan saturar la BD. En algunos ya está implementado, creo que en la mayoría. Nomás falta me parece, agregarlo a la hora de dar de alta una esp. Si bien ya está implementado que el registro se borre, falta hacer que el usuario no pueda agregar, por ejemplo, mas de 10 o 20 ESP al dia.
 
-#Hacer las vistas de instructivos-->Ya estan las dos vistas fijarse si estan bien las intrucciones si faltan o si estan bien explicadas ---->HECHO
-
-
-#Reprogramar la vinculación para no usar archivo csv. Simplemente usar la base de datos ---->HECHO
-
-
---COMPRA DE LEDS PRECISOS/USO DE 3 LEDS
-
-#Comprar leds precisos e ir pensando el diseño del producto. Esto porque la idea inicial era que tenga 3 leds.
-Habria que poner en la pagina que el usuario setee con que led quiere manejar cada dispositivo. Esto es facil lo unico es que hay que 
-volver a gastar plata
-
-
---FUNCIONALIDAD 
-
-#Se me ocurrió que el administrador pueda programar el envio de señales. Por ejemplo, que la directora setee desde 
-su usuario que todos los aires se enciendan a las 14 de lunes a viernes y se apaguen a las 20
-Esto es lo unico que nos llevaria un poco mas de tiempo, porque hay que hacer vistas y ver como almacenar la info de las
-configuraciones. Capaz tambien podamos usar cron jobs --> HECHO TODO EL CRD (EL UPDATE ME PARECIO INNECESARIO). SOLO FALTA HACER BIEN UNA VALIDACION PARA
-QUE NO SE SUPERPONGAN LOS CRONS
-
-
-Sacando el ultimo punto, son todas cosas que podemos hacer en 1/2 dias. Son detalles que podemos agregarle para que quede mas completo
-Seguramente vayan apareciendo nuevas cosas pero yo por ahora arrancaria con esto y con el informe asi nos lo vamos sacando de encima
+-Mejorar el sistema de compra. Hay que poner la opcion de poder comprar el producto en cantidad (creo que esto es nomas configurandolo desde el controlador de paypal) y consultarle a la aylen que mas hay que hacer con eso, porque ahora solo guardamos la compra como registro en la bd. Capaz, es necesario que a la hora de registrarse hacerlo con un mail de compra, es posible, a mi no me parece bien pero por ahi nos lo exigen. Me parece que como esta actualmente esta bien, uno puede hacerse un usuario independientemente de si compró o no, pero no puede hacer practicamente nada, ya que si quiere saturar la bd para eso estan los crons.
