@@ -95,9 +95,9 @@ void setup() {
 
     while (!WiFi.smartConfigDone()) {
       digitalWrite(ledParpadeo, HIGH);
-      delay(1000);
+      delay(500);
       digitalWrite(ledParpadeo, LOW);
-      delay(1000);
+      delay(500);
       Serial.print(".");
     }
 
