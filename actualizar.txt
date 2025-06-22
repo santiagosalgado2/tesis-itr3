@@ -1,0 +1,5 @@
+ssh -i "C:\Users\Santiago Salgado\Downloads\irconnect.pem" ubuntu@56.124.120.101 ---> PARA CONECTARSE, HAY QUE DESCARGARSE ANTES EL ARCHIVO .PEM
+
+sudo su
+
+sudo /var/www/html/irconnect/deploy.sh
