@@ -1,29 +1,23 @@
 *********ACTUALIZACIÓN DE ESTE ARCHIVO*********
 
-*PARA IR HACIENDO ANTES DEL HITO 2, ES DECIR DURANTE ESTA SEMANA
 
--Sincronizar los crons según lo necesite la función (actualmente están todos para que se ejecuten cada 24hrs, hay algunos que necesitan hacerlo antes)
-
--Seguir comentando los controladores, falta la parte un poco más paja que es la de la esp, la de los crons, etc. pero es solo comentar
-
--Validar TODOS los formularios a nivel back, es decir, que todos los controladores que se ejecuten a partir del envío de datos por un formulario deben tener una validación de que estos datos están, porque el required a nivel front no es suficiente. Esto es muy simple y rápido, hay algunos controladores que ya lo tienen. Se puede hacer con filtros (que capaz queda mas organizado y optimizado, pero por ahí para la pagina nuestra no es lo ideal) o directamente en cada controlador. De cualquiera de las 2 formas está bien lo importante es que ande
+-Seguir comentando los controladores
 
 -Organizar código JS. Ponerlo en archivos separados de las vistas y comentarlo
 
--En el form de registro, agregar un cartelito que diga los requisitos de contraseña, que aparezca al presionar este campo. Yo lo habia hecho hace mil años pero no se por que no se ve
-
-DESPUES DEL HITO 2, FINALIZAR LO DE ARRIBA SI ES QUE QUEDA ALGO Y SEGUIR CON:
-
 -Armar el producto
 
--Adelantar el informe. Para el siguiente hito, lo ideal es tener por lo menos un borrador listo. Es decir, completar todos los puntos e ir corrigiéndolo
+-Terminar el informe
 
--Detectar y corregir errores
 
--Analizar mejoras. Una que hay que implementar es para la ruta de generación de códigos de verificación por get, ya que cualquier usuario puede generar códigos manualmente poniendo esta ruta de forma manual en el navegador lo que no es bueno. Hay que hacer alguna implementación de tokens.
+
+
+
 
 -Validar bien los eventos antes de ser dados de alta. No se deben superponer sino puede que alguno no se ejecute correctamente
 
--Implementar limitaciones en los CRUDs para que los usuarios no puedan saturar la BD. En algunos ya está implementado, creo que en la mayoría. Nomás falta me parece, agregarlo a la hora de dar de alta una esp. Si bien ya está implementado que el registro se borre, falta hacer que el usuario no pueda agregar, por ejemplo, mas de 10 o 20 ESP al dia.
+-Revisar el envio y grabacion de señales. A veces quedan las acciones cargadas y la esp queda bloqueada (es raro que pase, por ahi simplemente borrando todo en alguna parte del flujo de usuario se soluciona y listo)
 
--Mejorar el sistema de compra. Hay que poner la opcion de poder comprar el producto en cantidad (creo que esto es nomas configurandolo desde el controlador de paypal) y consultarle a la aylen que mas hay que hacer con eso, porque ahora solo guardamos la compra como registro en la bd. Capaz, es necesario que a la hora de registrarse hacerlo con un mail de compra, es posible, a mi no me parece bien pero por ahi nos lo exigen. Me parece que como esta actualmente esta bien, uno puede hacerse un usuario independientemente de si compró o no, pero no puede hacer practicamente nada, ya que si quiere saturar la bd para eso estan los crons.
+-
+
+-Usar tokens en la generacion de codigos --> para despues de las vacaciones
