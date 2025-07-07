@@ -18,6 +18,8 @@
 
 -Revisar el envio y grabacion de señales. A veces quedan las acciones cargadas y la esp queda bloqueada (es raro que pase, por ahi simplemente borrando todo en alguna parte del flujo de usuario se soluciona y listo)
 
--
+-Que se puedan comprar mas de 1 producto en una misma orden
+
+-Boton off para el aire acondicionado
 
 -Usar tokens en la generacion de codigos --> para despues de las vacaciones
