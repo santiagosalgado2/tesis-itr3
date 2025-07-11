@@ -23,3 +23,5 @@
 -Boton off para el aire acondicionado
 
 -Usar tokens en la generacion de codigos --> para despues de las vacaciones
+
+-La vista de grabar señales del televisor esta roto el responsive, debe ser por el boton de instrucciones falta arreglar eso
