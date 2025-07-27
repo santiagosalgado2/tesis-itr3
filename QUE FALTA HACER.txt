@@ -17,6 +17,11 @@
 -Validar bien los eventos antes de ser dados de alta. No se deben superponer sino puede que alguno no se ejecute correctamente
 
 -Revisar el envio y grabacion de señales. A veces quedan las acciones cargadas y la esp queda bloqueada (es raro que pase, por ahi simplemente borrando todo en alguna parte del flujo de usuario se soluciona y listo)
+    -Añadir en la esp un tiempo de 3 minutos o similar para grabar una señal, si no la graba el usuario, que se borre el registro en la BD
+    manejador, y el js al detectar esto tire un alert que diga tiempo de espera agotado
+    -websocket, ver que onda, si conviene y si no es muy dificil
+    -el enviar señales creo que no tiene nada a solucionar, capaz ver el tema de spamear botones con señales, pero creo que lo unico que pasaria es que
+    se irian reemplazando y la esp enviaria alguna y las otras no, que no esta mal tampoco
 
 -Que se puedan comprar mas de 1 producto en una misma orden
 
