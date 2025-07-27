@@ -145,8 +145,6 @@ void handleTask(const String& task) {
   DeserializationError error = deserializeJson(doc, task);
 
   if (error) {
-    Serial.print(F("deserializeJson() failed: "));
-    Serial.println(error.f_str());
     return;
   }
 
@@ -427,26 +425,49 @@ int led = doc["led"] ? int(doc["led"]) : 1;    Serial.print("Hexadecimal recibid
       Serial.println(httpResponseCode);
 
  } else if (strcmp(accion, "grabar_senal") == 0) {
-    Serial.println("hola");
+    Serial.println("Iniciando grabación de señal IR...");
+    
+    unsigned long startTime = millis();
+    unsigned long timeout = 180000; // 3 minutos en milisegundos
+    bool signalReceived = false;
+    
+    Serial.println("Esperando señal IR (máximo 3 minutos)...");
+    
+    while ((millis() - startTime) < timeout && !signalReceived) {
+      if (irrecv.decode(&results)) {
+        signalReceived = true;
+        protocolo = typeToString(results.decode_type);
+        codigoHex = resultToHexidecimal(&results); // Eliminar el segundo argumento
+        bits = String(results.bits);
 
-    Serial.println("hola");
-    while (!irrecv.decode(&results)) {
-      delay(100);
+        // Imprimir los valores almacenados en las variables
+        Serial.println("Protocolo: " + protocolo);
+        Serial.println("Código Hexadecimal: " + codigoHex);
+        Serial.println("Bits: " + bits);
+
+        // Enviar los datos a la función PHP
+        sendIRCode(protocolo, codigoHex, bits);
+
+        // Reiniciar el receptor para capturar la siguiente señal
+        irrecv.resume();
+      } else {
+        delay(100); // Pequeña pausa antes de intentar de nuevo
+      }
     }
-    protocolo = typeToString(results.decode_type);
-    codigoHex = resultToHexidecimal(&results); // Eliminar el segundo argumento
-    bits = String(results.bits);
-
-    // Imprimir los valores almacenados en las variables
-    Serial.println("Protocolo: " + protocolo);
-    Serial.println("Código Hexadecimal: " + codigoHex);
-    Serial.println("Bits: " + bits);
-
-    // Enviar los datos a la función PHP
-    sendIRCode(protocolo, codigoHex, bits);
-
-    // Reiniciar el receptor para capturar la siguiente señal
-    irrecv.resume();
+    
+    // Si no se recibió señal en 3 minutos, eliminar los datos de la solicitud
+    if (!signalReceived) {
+      Serial.println("Timeout: No se detectó señal IR en 3 minutos. Eliminando solicitud...");
+      
+      HTTPClient http;
+      http.begin(serverDeleteData);
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+      String postData = "code=" + code;
+      int httpResponseCode = http.POST(postData);
+      Serial.print("Respuesta del servidor al eliminar datos: ");
+      Serial.println(httpResponseCode);
+      http.end();
+    }
   }
 }
 
