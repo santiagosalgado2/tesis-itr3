@@ -19,9 +19,9 @@ String code = "8lIsgR9J";
 const int ledParpadeo = 5;
 const int ledConectado = 14;
 
-
+ 
 const uint16_t kSendPin1 = 16;
-const uint16_t kSendPin2 = 17;
+const uint16_t kSendPin2 = 19;
 const uint16_t kSendPin3 = 22;
 
 // Pin donde se conecta el receptor IR
