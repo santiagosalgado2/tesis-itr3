@@ -16,16 +16,16 @@ const char* serverNameSignal = "https://irconnect.site/handle/updateDbsignal";
 const char* serverDeleteData = "https://irconnect.site/handle/deleteData";
 String code = "8lIsgR9J";
 
-const int ledParpadeo = 5;
-const int ledConectado = 14;
+const int ledParpadeo = 25;
+const int ledConectado = 12;
 
  
-const uint16_t kSendPin1 = 16;
-const uint16_t kSendPin2 = 19;
-const uint16_t kSendPin3 = 22;
+const uint16_t kSendPin1 = 23;
+const uint16_t kSendPin2 = 17;
+const uint16_t kSendPin3 = 15;
 
 // Pin donde se conecta el receptor IR
-const uint16_t kRecvPin = 15; // Cambia este pin según tu conexión
+const uint16_t kRecvPin = 27; // Cambia este pin según tu conexión
 
 // Tamaño del buffer para capturar señales IR
 const uint16_t kCaptureBufferSize = 1024;
